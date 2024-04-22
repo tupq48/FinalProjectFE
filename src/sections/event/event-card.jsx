@@ -15,31 +15,57 @@ import { format } from 'date-fns';
 // ----------------------------------------------------------------------
 
 export default function EventCard({ event }) {
-  const renderStatus = (
-    <Label
-      variant="filled"
-      color={
-        (event.status === 'completed' && 'error') ||
-        (event.status === 'ongoing' && 'info') ||
-        (event.status === 'upcoming' && 'warning') // Bổ sung trạng thái 'upcoming' với màu 'warning'
-      }
-      sx={{
-        zIndex: 9,
-        top: 16,
-        right: 16,
-        position: 'absolute',
-        textTransform: 'uppercase',
-      }}
-    >
-      {event.status}
-    </Label>
-  );
+  const convertTime = (time) => {
+    const [timeString, dateString] = time.split(' '); // Tách chuỗi thời gian và ngày
+    const [hours, minutes, seconds] = timeString.split(':'); // Tách giờ, phút và giây
+    const [day, month, year] = dateString.split('-'); // Tách ngày, tháng và năm
+    const resultTime = new Date(year, month - 1, day, hours, minutes, seconds);
+    return resultTime;
+  };
+
+  const renderStatus = () => {
+    const now = new Date(); // Get the current time
+    const startTime = convertTime(event.startTime);
+    const endTime = convertTime(event.endTime);
+    let statusColor = '';
+    let statusText = '';
+
+    if (now < startTime) {
+      statusColor = 'warning';
+      statusText = 'Upcoming';
+      console.log(`${event.startTime} - ${now}`);
+    } else if (now > endTime) {
+      statusColor = 'error';
+      statusText = 'Completed';
+      console.log(`${event.startTime} - ${statusText}`);
+    } else {
+      statusColor = 'info';
+      statusText = 'Ongoing';
+      console.log(`${event.startTime} - ${statusText}`);
+    }
+
+    return (
+      <Label
+        variant="filled"
+        color={statusColor}
+        sx={{
+          zIndex: 9,
+          top: 16,
+          right: 16,
+          position: 'absolute',
+          textTransform: 'uppercase',
+        }}
+      >
+        {statusText}
+      </Label>
+    );
+  };
 
   const renderImg = (
     <Box
       component="img"
       alt={event.name}
-      src={event.cover}
+      src={event.imageUrls[0]}
       sx={{
         top: 0,
         width: 1,
@@ -50,48 +76,41 @@ export default function EventCard({ event }) {
     />
   );
 
-  //   const renderPrice = (
-  //     <Typography variant="subtitle1">
-  //       <Typography
-  //         component="span"
-  //         variant="body1"
-  //         sx={{
-  //           color: 'text.disabled',
-  //           textDecoration: 'line-through',
-  //         }}
-  //       >
-  //         {product.priceSale && fCurrency(product.priceSale)}
-  //       </Typography>
-  //       &nbsp;
-  //       {fCurrency(product.price)}
-  //     </Typography>
-  //   );
-
   return (
     <Card>
-      <Box sx={{ pt: '100%', position: 'relative' }}>
-        {event.status && renderStatus}
+      <Link
+        href={`/event/${event.eventId}`}
+        color="inherit"
+        underline="none"
+        variant="subtitle2"
+        noWrap
+      >
+        <Box sx={{ pt: '100%', position: 'relative' }}>
+          {renderStatus()}
 
-        {renderImg}
-      </Box>
+          {renderImg}
+        </Box>
 
-      <Stack spacing={2} sx={{ p: 3 }}>
-        <Link
-          href={`/event/${event.id}`}
-          color="inherit"
-          underline="hover"
-          variant="subtitle2"
-          noWrap
-        >
-          {event.name}
-        </Link>
-
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <div style={italicTextStyle}>{format(event.startTime, 'dd/MM/yyyy')}</div>
-          <div style={italicTextStyle}>to</div>
-          <div style={italicTextStyle}>{format(event.endTime, 'dd/MM/yyyy')}</div>
+        <Stack spacing={2} sx={{ p: 3 }}>
+          <Stack direction="row" alignItems="center" justifyContent="center">
+            {event.eventName}
+          </Stack>
+          <Stack direction="row" alignItems="center" justifyContent="center">
+            <div style={{ ...timeStyle, fontWeight: 'bold' }}>
+              {format(convertTime(event.startTime), 'MMMM dd yyyy')}
+            </div>
+            <div style={{ padding: '4px' }} />
+            <div style={timeStyle}>{format(convertTime(event.startTime), 'hh:mm')}</div>
+          </Stack>
+          <Stack direction="row" alignItems="center" justifyContent="center">
+            <div style={{ ...timeStyle, fontWeight: 'bold' }}>
+              {format(convertTime(event.endTime), 'MMMM dd yyyy')}
+            </div>
+            <div style={{ padding: '4px' }} />
+            <div style={timeStyle}>{format(convertTime(event.endTime), 'hh:mm')}</div>
+          </Stack>
         </Stack>
-      </Stack>
+      </Link>
     </Card>
   );
 }
@@ -100,6 +119,7 @@ EventCard.propTypes = {
   event: PropTypes.object,
 };
 
-const italicTextStyle = {
+const timeStyle = {
   fontStyle: 'italic',
+  fontSize: 'smaller',
 };
