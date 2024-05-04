@@ -1,17 +1,12 @@
+import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-// import Typography from '@mui/material/Typography';
-
-// import { fCurrency } from 'src/utils/format-number';
 
 import Label from 'src/components/label';
-// import { ColorPreview } from 'src/components/color-utils';
-
-import { format } from 'date-fns';
 // ----------------------------------------------------------------------
 
 export default function EventCard({ event }) {
@@ -33,15 +28,12 @@ export default function EventCard({ event }) {
     if (now < startTime) {
       statusColor = 'warning';
       statusText = 'Upcoming';
-      console.log(`${event.startTime} - ${now}`);
     } else if (now > endTime) {
       statusColor = 'error';
       statusText = 'Completed';
-      console.log(`${event.startTime} - ${statusText}`);
     } else {
       statusColor = 'info';
       statusText = 'Ongoing';
-      console.log(`${event.startTime} - ${statusText}`);
     }
 
     return (

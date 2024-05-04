@@ -7,21 +7,39 @@ const getEventsByPage = async (page = 1, pageSize = 8) => {
   try {
     const url = `http://localhost:8080/api/event?pageSize=${pageSize}&page=${page}`;
     const response = await axios.get(url);
-    const { eventDtos, total } = response.data; // Destructuring
+    const { eventDtos, total } = response.data; 
     console.log(eventDtos);
     return {
       total,
       events: eventDtos,
     };
   } catch (error) {
-    // Xử lý lỗi ở đây
     console.error('Có lỗi xảy ra:', error);
-    // Trả về một object rỗng trong trường hợp lỗi
     return {
       total: 0,
       events: [],
     };
   }
 };
+
+const config = {
+  headers: {
+      'Content-Type': 'multipart/form-data'
+  }
+};
+
+const registerEvent = async (eventData) => {
+  try {
+    console.log(eventData );
+    const url = 'http://localhost:8080/api/event';
+    const response = await axios.post(url, eventData, config);
+    return response.data; // Trả về dữ liệu từ phản hồi của API
+  } catch (error) {
+    console.error('Có lỗi xảy ra khi đăng ký sự kiện:', error);
+    throw error; // Ném lỗi để bên gọi hàm có thể xử lý
+  }
+};
+
+
   
-export { getEventsByPage };
+export { registerEvent, getEventsByPage };
