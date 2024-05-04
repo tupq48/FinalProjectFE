@@ -1,8 +1,9 @@
 import { format } from 'date-fns';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
+// import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 
@@ -71,11 +72,13 @@ export default function EventCard({ event }) {
   return (
     <Card>
       <Link
-        href={`/event/${event.eventId}`}
-        color="inherit"
-        underline="none"
-        variant="subtitle2"
-        noWrap
+        to={`/event/${event.eventId}`}
+        style={{
+          color: 'inherit', // Màu sẽ được kế thừa từ phần tử cha
+          textDecoration: 'none', // Loại bỏ gạch chân cho link
+          fontSize: '1rem', // Cỡ chữ
+          whiteSpace: 'nowrap', // Không ngắt dòng
+        }}
       >
         <Box sx={{ pt: '100%', position: 'relative' }}>
           {renderStatus()}
@@ -85,7 +88,7 @@ export default function EventCard({ event }) {
 
         <Stack spacing={2} sx={{ p: 3 }}>
           <Stack direction="row" alignItems="center" justifyContent="center">
-            {event.eventName}
+            <span style={{ color: 'darkblue', fontWeight: 'bold' }}>{event.eventName}</span>
           </Stack>
           <Stack direction="row" alignItems="center" justifyContent="center">
             <div style={{ ...timeStyle, fontWeight: 'bold' }}>
