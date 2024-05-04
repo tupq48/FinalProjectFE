@@ -1,0 +1,58 @@
+import axios from 'axios';
+
+const getAllUsers = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/api/user/getAll');
+    console.log("data: ", response);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data: ', error);
+    throw error;
+  }
+};
+const updateUser = async (formDataUpdate) => {
+  try {
+    await axios.post('http://localhost:8080/api/user', formDataUpdate, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  } catch (error) {
+    console.error('Failed to register user:', error);
+    throw error;
+  }
+};
+const getUserById = async (id) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/api/user/getUserById/${id}`);
+    console.log("User Detail: ", response);
+    return response.data;
+  } catch (error) {
+    console.error('Error getUser data: ', error);
+    throw error;
+  }
+};
+const deleleUser = async (id) => {
+  try {
+    const response = await axios.delete(`http://localhost:8080/api/user/${id}/deleteBusiness/`);
+    console.log("data: ", response);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data: ', error);
+    throw error;
+  }
+};
+const addUser = async (formData) => {
+  try {
+    const response = await axios.post('http://localhost:8080/api/auth/register', formData);
+    console.log("data: ", response);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data: ', error);
+    throw error;
+  }
+};
+
+export default {
+  getAllUsers, updateUser, getUserById, deleleUser, addUser
+};
