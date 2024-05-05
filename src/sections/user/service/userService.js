@@ -52,7 +52,16 @@ const addUser = async (formData) => {
     throw error;
   }
 };
+const login = async (formData) => {
+  try {
+    const response = await axios.post('http://localhost:8080/api/auth/authenticate', formData);
+    return response.data;
+  } catch (error) {
+    console.error('Error login data: ', error);
+    throw error;
+  }
+};
 
 export default {
-  getAllUsers, updateUser, getUserById, deleleUser, addUser
+  getAllUsers, updateUser, getUserById, deleleUser, addUser, login
 };

@@ -50,10 +50,10 @@ export default function UserPage() {
   });
   const functionOpenPopup = () => {
     openChange(true);
-  }
+  };
   const closePopup = () => {
     openChange(false);
-  }
+  };
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -129,15 +129,15 @@ export default function UserPage() {
     comparator: getComparator(order, orderBy),
     filterName,
   });
+
   const handleSubmit = async () => {
     if (!validateForm()) {
       return;
     }
     try {
-      const data = await userService.addUser(formData)
+      const data = await userService.addUser(formData);
       console.log('User registered:', data);
       closePopup();
-
     } catch (error) {
       console.error('Failed to register user:', error.response);
     }
@@ -158,14 +158,17 @@ export default function UserPage() {
     return true;
   };
 
-
-
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Users</Typography>
 
-        <Button onClick={functionOpenPopup} variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button
+          onClick={functionOpenPopup}
+          variant="contained"
+          color="inherit"
+          startIcon={<Iconify icon="eva:plus-fill" />}
+        >
           New User
         </Button>
         <UserRegistrationDialog
@@ -204,22 +207,20 @@ export default function UserPage() {
                 ]}
               />
               <TableBody>
-                {users
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <UserTableRow
-                      key={row.user_id}
-                      id={row.id}
-                      name={row.name}
-                      gender={row.gender}
-                      status={row.enabled}
-                      email={row.gmail}
-                      avatarUrl={row.urlImage}
-                      phone={row.phoneNumber}
-                      selected={selected.indexOf(row.name) !== -1}
-                      handleClick={(event) => handleClick(event, row.name)}
-                    />
-                  ))}
+                {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                  <UserTableRow
+                    key={row.user_id}
+                    id={row.id}
+                    name={row.name}
+                    gender={row.gender}
+                    status={row.enabled}
+                    email={row.gmail}
+                    avatarUrl={row.urlImage}
+                    phone={row.phoneNumber}
+                    selected={selected.indexOf(row.name) !== -1}
+                    handleClick={(event) => handleClick(event, row.name)}
+                  />
+                ))}
 
                 <TableEmptyRows
                   height={77}
@@ -243,6 +244,5 @@ export default function UserPage() {
         />
       </Card>
     </Container>
-
   );
 }
