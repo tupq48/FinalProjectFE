@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -40,6 +42,7 @@ export default function UserPage() {
   const [users, setUsers] = useState([]);
   const [open, openChange] = useState(false);
   const [visible, setVisible] = useState(true);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: '',
     gmail: '',
@@ -55,15 +58,18 @@ export default function UserPage() {
     openChange(false);
   };
   const fetchData = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const data = await userService.getAllUsers();
       setUsers(data);
-      setLoading(false);
     } catch (error) {
       console.error('Error fetching data: ', error);
       setLoading(false);
     }
+    finally {
+      setLoading(false);
+    }
+
   };
   useEffect(() => {
     fetchData();
@@ -130,26 +136,40 @@ export default function UserPage() {
     filterName,
   });
 
-  const handleSubmit = async () => {
-    if (!validateForm()) {
-      return;
-    }
-    try {
-      const data = await userService.addUser(formData);
-      console.log('User registered:', data);
-      closePopup();
-    } catch (error) {
-      console.error('Failed to register user:', error.response);
-    }
-    fetchData();
+  const onSubmitUser = async (formData1) => {
+     toast
+      .promise(userService.addUser(formData1), {
+        pending: 'Đang xử lý...',
+        success: 'Thêm user đã được đăng ký thành công!',
+        error: 'Đã xảy ra lỗi khi đăng ký user!',
+      })
+      .then(async () => {
+        setUsers([]);
+        const data = await userService.getAllUsers();
+        setUsers(data);
+      });
   };
 
   const notFound = !dataFiltered.length && !!filterName;
   const handleChange = (e) => {
-    const id = e.target.id.includes('Select') ? 'gender' : e.target.id;
-    setFormData({ ...formData, [id]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [e.taget.name]: e.target.value });
+    //   setFormData((prevData) => ({
+    //     ...prevData,
+    //     [name]: value,
+    //   }));
   };
-
+  const onSubmitUpdateUser = async (formDataUpdate) => {
+     toast
+      .promise(userService.updateUser(formDataUpdate), {
+        pending: 'Đang xử lý...',
+        success: 'Cập nhật user thành công!',
+        error: 'Đã xảy ra lỗi khi cập nhật user!',
+      })
+      .then(async () => {
+        fetchData();      
+      });
+  };
   const validateForm = () => {
     if (formData.password.length < 8) {
       alert('Password must be at least 8 characters long.');
@@ -160,6 +180,18 @@ export default function UserPage() {
 
   return (
     <Container>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Users</Typography>
 
@@ -176,7 +208,7 @@ export default function UserPage() {
           closePopup={closePopup}
           formData={formData}
           handleChange={handleChange}
-          handleSubmit={handleSubmit}
+          onSubmitUser={onSubmitUser}
           setVisible={setVisible}
           visible={visible}
         />
@@ -219,6 +251,7 @@ export default function UserPage() {
                     phone={row.phoneNumber}
                     selected={selected.indexOf(row.name) !== -1}
                     handleClick={(event) => handleClick(event, row.name)}
+                    onSubmitUpdateUser={onSubmitUpdateUser}
                   />
                 ))}
 

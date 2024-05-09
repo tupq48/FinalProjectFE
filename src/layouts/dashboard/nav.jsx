@@ -61,12 +61,14 @@ export default function Nav({ openNav, onCloseNav }) {
       </Box>
     </Box>
   );
-
+  const currentUser = {
+    role: 'user', // or 'user'
+  };
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-      {navConfig.map((item) => (
-        <NavItem key={item.title} item={item} />
-      ))}
+      {navConfig.filter(item => item.role === currentUser.role || item.role === 'all').map((item) => (
+    <NavItem key={item.title} item={item} />
+  ))}
     </Stack>
   );
 

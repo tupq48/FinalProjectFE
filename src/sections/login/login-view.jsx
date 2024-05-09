@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { useState } from 'react';
+import {useNavigate,useLocation } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -14,7 +15,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { useRouter } from 'src/routes/hooks';
+// import { useRouter } from 'src/routes/hooks';
 
 import { bgGradient } from 'src/theme/css';
 
@@ -38,8 +39,10 @@ const schema = Joi.object({
 });
 
 export default function LoginView() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const theme = useTheme();
-  const router = useRouter();
+  // const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
@@ -62,6 +65,8 @@ export default function LoginView() {
   };
 
   const handleSubmit = async () => {
+    const from = location.state?.from || "/";
+
     const validationResult = schema.validate(formData, { abortEarly: false });
     if (validationResult.error) {
       const newErrors = {};
@@ -76,7 +81,9 @@ export default function LoginView() {
     const response = await loginResponse;
     console.log(response.accessToken);
     localStorage.setItem('accessToken', response.accessToken);
-    router.push('/');
+    // router.push('/');
+    navigate(from, { replace: true });
+    // router.push(redirectTo);
   };
 
   const renderForm = (

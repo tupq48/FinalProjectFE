@@ -29,6 +29,7 @@ export default function UserTableRow({
   phone,
   status,
   handleClick,
+  onSubmitUpdateUser
 }) {
   const [formData, setFormData] = useState({
     id: '',
@@ -113,13 +114,11 @@ export default function UserTableRow({
       formDataUpdate.append(key, value);
     });
     try {
-      await userService.updateUser(formDataUpdate);
-      alert("Update success");
+      const f = onSubmitUpdateUser(formDataUpdate);
       closeUpdatePopup();
-      window.location.reload();
+      await f;
     } catch (error) {
-      console.error('Error uploading:', error);
-      alert("Update false");
+      console.error('Đã xảy ra lỗi khi đăng ký sự kiện:', error);
     }
   };
 
@@ -232,5 +231,6 @@ UserTableRow.propTypes = {
   gender: PropTypes.any,
   selected: PropTypes.any,
   status: PropTypes.string,
-  id: PropTypes.any
+  id: PropTypes.any,
+  onSubmitUpdateUser: PropTypes.func
 };
