@@ -1,8 +1,12 @@
 import axios from 'axios';
 
+import urlBEAPI from 'src/sections/urlAPI';
+
 const getAllUsers = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/user/getAll');
+    const response = await axios.get(`${urlBEAPI}/api/user/getAll`);
+    // const response = await axios.get('http://localhost:8080/api/user/getAll');
+
     console.log("data: ", response);
     return response.data;
   } catch (error) {

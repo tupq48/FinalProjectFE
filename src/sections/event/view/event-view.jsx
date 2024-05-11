@@ -77,7 +77,7 @@ export default function EventPage() {
         error: 'Đã xảy ra lỗi khi đăng ký sự kiện!',
       })
       .then(() => {
-        // setEvents([]);
+        setEvents([]);
         fetchEvents();
       });
   };

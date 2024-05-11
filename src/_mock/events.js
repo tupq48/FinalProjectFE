@@ -30,6 +30,9 @@ const config = {
 
 const registerEvent = async (eventData) => {
   try {
+    Array.from(eventData.entries()).forEach(([key, value]) => {
+      console.log("event: ",key, value);
+    });
     console.log(eventData );
     const url = 'http://localhost:8080/api/event';
     const response = await axios.post(url, eventData, config);

@@ -82,7 +82,7 @@ export default function LoginView() {
     console.log(response.accessToken);
     localStorage.setItem('accessToken', response.accessToken);
     // router.push('/');
-    navigate(from, { replace: true });
+   navigate(from, { replace: true });
     // router.push(redirectTo);
   };
 

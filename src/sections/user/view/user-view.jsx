@@ -42,7 +42,6 @@ export default function UserPage() {
   const [users, setUsers] = useState([]);
   const [open, openChange] = useState(false);
   const [visible, setVisible] = useState(true);
-  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: '',
     gmail: '',
@@ -135,10 +134,29 @@ export default function UserPage() {
     comparator: getComparator(order, orderBy),
     filterName,
   });
+  function formatDateTime(date) {
+    console.log(date);
+    date = new Date(date);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
 
-  const onSubmitUser = async (formData1) => {
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+  const onSubmitUser = async (form) => {
+    const formAdd = new FormData();
+
+    Object.entries(form).forEach(([key, value]) => {
+      if (key === 'dateOfBirth') {
+        value = formatDateTime(value);
+      }
+      formAdd.append(key, value);
+    });
      toast
-      .promise(userService.addUser(formData1), {
+      .promise(userService.addUser(formAdd), {
         pending: 'Đang xử lý...',
         success: 'Thêm user đã được đăng ký thành công!',
         error: 'Đã xảy ra lỗi khi đăng ký user!',
@@ -152,7 +170,6 @@ export default function UserPage() {
 
   const notFound = !dataFiltered.length && !!filterName;
   const handleChange = (e) => {
-    const { name, value } = e.target;
     setFormData({ ...formData, [e.taget.name]: e.target.value });
     //   setFormData((prevData) => ({
     //     ...prevData,
@@ -169,13 +186,6 @@ export default function UserPage() {
       .then(async () => {
         fetchData();      
       });
-  };
-  const validateForm = () => {
-    if (formData.password.length < 8) {
-      alert('Password must be at least 8 characters long.');
-      return false;
-    }
-    return true;
   };
 
   return (

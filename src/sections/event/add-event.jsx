@@ -49,7 +49,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
 
   const handleSubmit = async () => {
     const form = new FormData();
-
+    console.log("formDATA: ", formData)
     Object.entries(formData).forEach(([key, value]) => {
       if (key === 'startTime' || key === 'endTime') {
         value = formatDateTime(value);
