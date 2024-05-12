@@ -1,5 +1,6 @@
+import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Grid from '@mui/material/Grid';
 import { Modal, Button, TextField } from '@mui/material';
@@ -17,8 +18,18 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
       description: '',
       startTime: null,
       endTime: null,
+      imageUrls: [],
     }
   );
+
+  useEffect(() => {
+    if (initialValues != null && initialValues.startTime != null) {
+      const formDataCopy = { ...initialValues };
+      formDataCopy.startTime = dayjs(convertDateTimeStringToObject(initialValues.startTime));
+      formDataCopy.endTime = dayjs(convertDateTimeStringToObject(initialValues.endTime));
+      setFormData(formDataCopy);
+    }
+  }, [initialValues]);
 
   const [selectedImages, setSelectedImages] = useState([]);
 
@@ -34,8 +45,16 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
     });
   };
 
+  function convertDateTimeStringToObject(dateTimeString) {
+    const [time, date] = dateTimeString.split(' ');
+    const [hours, minutes, seconds] = time.split(':');
+    const [day, month, year] = date.split('-');
+    const newDate = new Date(year, month - 1, day, hours, minutes, seconds);
+
+    return newDate;
+  }
+
   function formatDateTime(date) {
-    console.log(date);
     date = new Date(date);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -49,7 +68,6 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
 
   const handleSubmit = async () => {
     const form = new FormData();
-    console.log("formDATA: ", formData)
     Object.entries(formData).forEach(([key, value]) => {
       if (key === 'startTime' || key === 'endTime') {
         value = formatDateTime(value);
@@ -68,6 +86,16 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
     } catch (error) {
       console.error('Đã xảy ra lỗi khi đăng ký sự kiện:', error);
     }
+  };
+
+  const getImageLinkFromUrl = (url, index) => {
+    const parts = url.split('/');
+    const fileName = parts[parts.length - 1];
+    return (
+      <a style={{ margin: '0 10px' }} href={url} key={index}>
+        {fileName}
+      </a>
+    );
   };
 
   return (
@@ -167,7 +195,13 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
               Upload Images
               <input type="file" hidden multiple accept="image/*" onChange={handleImageChange} />
             </Button>
-            {selectedImages.map((image) => ` ${image.name} `)}
+            {selectedImages.map((image, index) => (
+              <span key={index}>{`   ${image.name}   `}</span>
+            ))}
+
+            {selectedImages.length === 0 &&
+              formData.imageUrls.length > 0 &&
+              formData.imageUrls.map((item, index) => getImageLinkFromUrl(item, index))}
           </Grid>
         </Grid>
 

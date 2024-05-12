@@ -4,8 +4,14 @@ import urlBEAPI from 'src/sections/urlAPI';
 
 const getAllUsers = async () => {
   try {
-    const response = await axios.get(`${urlBEAPI}/api/user/getAll`);
-    // const response = await axios.get('http://localhost:8080/api/user/getAll');
+    // Lấy token từ localStorage
+    const accessToken = localStorage.getItem("accessToken");
+
+    const response = await axios.get(`${urlBEAPI}/api/user/getAll`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}` // Thêm token vào header
+      }
+    });
 
     console.log("data: ", response);
     return response.data;
@@ -14,6 +20,7 @@ const getAllUsers = async () => {
     throw error;
   }
 };
+
 const updateUser = async (formDataUpdate) => {
   try {
     await axios.post('http://localhost:8080/api/user', formDataUpdate, {
@@ -58,7 +65,7 @@ const addUser = async (formData) => {
 };
 const login = async (formData) => {
   try {
-    const response = await axios.post('http://localhost:8080/api/auth/authenticate', formData);
+    const response = await axios.post(`${urlBEAPI}/api/auth/authenticate`, formData);
     return response.data;
   } catch (error) {
     console.error('Error login data: ', error);

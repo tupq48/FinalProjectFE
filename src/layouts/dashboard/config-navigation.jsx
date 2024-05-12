@@ -11,19 +11,25 @@ const navConfig = [
     title: 'dashboard',
     path: '/',
     icon: icon('ic_analytics'),
-    role: 'admin',
+    role: 'all',
   },
   {
     title: 'user',
     path: '/admin/user',
     icon: icon('ic_user'),
-    role: 'user'
+    role: 'admin',
   },
   {
     title: 'event',
     path: '/admin/event',
     icon: icon('ic_event'),
-    role: 'user'
+    role: 'admin',
+  },
+  {
+    title: 'event',
+    path: '/event',
+    icon: icon('ic_event'),
+    role: 'user',
   },
   {
     title: 'product',
@@ -39,7 +45,7 @@ const navConfig = [
     title: 'login',
     path: '/login',
     icon: icon('ic_lock'),
-    role: 'all'
+    role: 'all',
   },
   {
     title: 'Not found',
