@@ -1,6 +1,6 @@
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 import { lazy, Suspense } from 'react';
-import { Outlet, Navigate, useRoutes,useLocation   } from 'react-router-dom';
+import { Outlet, Navigate, useRoutes, useLocation } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
 
@@ -9,6 +9,7 @@ export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const EventDetailPage = lazy(() => import('src/pages/event-detail'));
 export const EventPage = lazy(() => import('src/pages/event'));
+export const UserEventPage = lazy(() => import('src/pages/user-event'));
 export const RegisterPage = lazy(() => import('src/pages/register'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
@@ -17,31 +18,31 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 // ----------------------------------------------------------------------
 
 export default function Router() {
-
-function isAdmin(token) {
-  try {
-    const decoded = jwtDecode(token);
-    console.log(decoded);
-    return decoded.authorities && decoded.authorities.includes('ROLE_ADMIN');
-  } catch (e) {
-    console.error("Invalid token:", e);
-    return false;
+  function isAdmin(token) {
+    try {
+      const decoded = jwtDecode(token);
+      return decoded.authorities && decoded.authorities.includes('ROLE_ADMIN');
+    } catch (e) {
+      console.error('Invalid token:', e);
+      return false;
+    }
   }
-}
-const location = useLocation();
-const token = localStorage.getItem('accessToken'); 
-const userIsAdmin = isAdmin(token);
-  // const isAdmin=true; 
+  const location = useLocation();
+  const token = localStorage.getItem('accessToken');
+  const userIsAdmin = isAdmin(token);
+  // const isAdmin=true;
   const routes = useRoutes([
     {
-      path:'admin',
-      element: userIsAdmin? (
+      path: 'admin',
+      element: userIsAdmin ? (
         <DashboardLayout>
           <Suspense fallback={<div>Loading...</div>}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
-      ):<Navigate to="/login" state={{ from: location.pathname }} />,
+      ) : (
+        <Navigate to="/login" state={{ from: location.pathname }} />
+      ),
       children: [
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
@@ -65,7 +66,7 @@ const userIsAdmin = isAdmin(token);
           element: <EventDetailPage />,
         },
         { path: 'user', element: <UserPage /> },
-        { path: 'event', element: <EventPage /> },
+        { path: 'event', element: <UserEventPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
       ],

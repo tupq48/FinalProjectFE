@@ -20,6 +20,8 @@ import { account } from 'src/_mock/account';
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 
+import { isAdmin } from 'src/sections/urlAPI';
+
 import { NAV } from './config-layout';
 import navConfig from './config-navigation';
 
@@ -61,14 +63,17 @@ export default function Nav({ openNav, onCloseNav }) {
       </Box>
     </Box>
   );
+
   const currentUser = {
-    role: 'user', // or 'user'
+    role: isAdmin() ? 'admin' : 'user',
   };
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-      {navConfig.filter(item => item.role === currentUser.role || item.role === 'all').map((item) => (
-    <NavItem key={item.title} item={item} />
-  ))}
+      {navConfig
+        .filter((item) => item.role === currentUser.role || item.role === 'all')
+        .map((item) => (
+          <NavItem key={item.title} item={item} />
+        ))}
     </Stack>
   );
 
