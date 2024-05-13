@@ -29,7 +29,8 @@ export default function UserTableRow({
   phone,
   status,
   handleClick,
-  onSubmitUpdateUser
+  onSubmitUpdateUser,
+  onDeleteUser
 }) {
   const [formData, setFormData] = useState({
     id: '',
@@ -72,23 +73,16 @@ export default function UserTableRow({
   };
   const handleDeleteUser = async () => {
     try {
-      console.log("id: ", id);
-      const data = await userService.deleleUser(id)
-      if (data) {
-        alert("Delele success")
-      }
-      else {
-        alert("Error Delete");
-      }
-      window.location.reload();
+      const f = onDeleteUser(id);
+      closeDeletePopup();
+      await f;
     } catch (error) {
-      console.error('Failed to register user:', error.response);
-    } closeDeletePopup();
+      console.error('Đã xảy ra lỗi khi đăng ký sự kiện:', error);
+    }
   };
   const findUserById = async () => {
     try {
       const data = await userService.getUserById(id)
-      console.log("user Detail: ", data);
       setFormData({
         id: data.id,
         gender: data.gender,
@@ -232,5 +226,7 @@ UserTableRow.propTypes = {
   selected: PropTypes.any,
   status: PropTypes.string,
   id: PropTypes.any,
-  onSubmitUpdateUser: PropTypes.func
+  onSubmitUpdateUser: PropTypes.func,
+  onDeleteUser: PropTypes.func
+
 };

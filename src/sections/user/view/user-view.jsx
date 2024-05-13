@@ -135,7 +135,6 @@ export default function UserPage() {
     filterName,
   });
   function formatDateTime(date) {
-    console.log(date);
     date = new Date(date);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -187,6 +186,17 @@ export default function UserPage() {
         fetchData();      
       });
   };
+  const onDeleteUser = async (id) => {
+    toast
+     .promise(userService.deleteUser(id), {
+       pending: 'Đang xử lý...',
+       success: 'Cập nhật user thành công!',
+       error: 'Đã xảy ra lỗi khi cập nhật user!',
+     })
+     .then(async () => {
+       fetchData();      
+     });
+ };
 
   return (
     <Container>
@@ -262,6 +272,7 @@ export default function UserPage() {
                     selected={selected.indexOf(row.name) !== -1}
                     handleClick={(event) => handleClick(event, row.name)}
                     onSubmitUpdateUser={onSubmitUpdateUser}
+                    onDeleteUser={onDeleteUser}
                   />
                 ))}
 

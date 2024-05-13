@@ -111,8 +111,6 @@ export default function UserRegistrationDialog({ open, closePopup, onSubmitUser,
   }
   const handleSubmit = async () => {
     const form = new FormData();
-console.log("formDATA: ", formData);
-
 Object.entries(formData).forEach(([key, value]) => {
   if (key === 'dateOfBirth') {
     value = formatDateTime(value);
@@ -122,7 +120,6 @@ Object.entries(formData).forEach(([key, value]) => {
 const formDataObj = {};
 form.forEach((value, key) => { formDataObj[key] = value; });
     const validationResult = schema.validate(formDataObj, { abortEarly: false });
-    console.log("loi: " ,validationResult)
     if (validationResult.error) {
       const newErrors = {};
       validationResult.error.details.forEach((detail) => {
@@ -132,7 +129,6 @@ form.forEach((value, key) => { formDataObj[key] = value; });
       return;
     }
     try {
-      console.log("dataform: ", formDataObj)
       const f = onSubmitUser(formDataObj);
       closePopup()
       await f;

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -9,13 +10,13 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
-import { account } from 'src/_mock/account';
+import  account  from 'src/_mock/account';
 
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
+    label: 'Blog',
     icon: 'eva:home-fill',
   },
   {
@@ -38,7 +39,8 @@ export default function AccountPopover() {
   };
 
   const handleClose = () => {
-    setOpen(null);
+    console.log("vào nè")
+   setOpen(null);
   };
 
   return (
@@ -95,8 +97,8 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleClose}>
-            {option.label}
+  <MenuItem key={option.label} onClick={handleClose} component={Link} to={`/${option.label.toLowerCase()}`}>
+  {option.label}
           </MenuItem>
         ))}
 

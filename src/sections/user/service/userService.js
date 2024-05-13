@@ -2,10 +2,15 @@ import axios from 'axios';
 
 import urlBEAPI from 'src/sections/urlAPI';
 
+const accessToken = localStorage.getItem("accessToken");
 const getAllUsers = async () => {
   try {
-    const response = await axios.get(`${urlBEAPI}/api/user/getAll`);
-    // const response = await axios.get('http://localhost:8080/api/user/getAll');
+    const response = await axios.get(`${urlBEAPI}/api/user/getAll`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+    );
 
     console.log("data: ", response);
     return response.data;
@@ -16,10 +21,11 @@ const getAllUsers = async () => {
 };
 const updateUser = async (formDataUpdate) => {
   try {
-    await axios.post('http://localhost:8080/api/user', formDataUpdate, {
+    await axios.post(`${urlBEAPI}/api/user`, formDataUpdate, {
       headers: {
         'Content-Type': 'multipart/form-data',
-      },
+        Authorization: `Bearer ${accessToken}`
+      }
     });
   } catch (error) {
     console.error('Failed to register user:', error);
@@ -28,7 +34,11 @@ const updateUser = async (formDataUpdate) => {
 };
 const getUserById = async (id) => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/user/getUserById/${id}`);
+    const response = await axios.get(`${urlBEAPI}/api/user/getUserById/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
     console.log("User Detail: ", response);
     return response.data;
   } catch (error) {
@@ -36,9 +46,13 @@ const getUserById = async (id) => {
     throw error;
   }
 };
-const deleleUser = async (id) => {
+const deleteUser = async (id) => {
   try {
-    const response = await axios.delete(`http://localhost:8080/api/user/${id}/deleteBusiness/`);
+    const response = await axios.delete(`${urlBEAPI}/api/user/${id}/deleteBusiness/`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
     console.log("data: ", response);
     return response.data;
   } catch (error) {
@@ -48,7 +62,7 @@ const deleleUser = async (id) => {
 };
 const addUser = async (formData) => {
   try {
-    const response = await axios.post('http://localhost:8080/api/auth/register', formData);
+    const response = await axios.post(`${urlBEAPI}/api/auth/register`, formData);
     console.log("data: ", response);
     return response.data;
   } catch (error) {
@@ -58,7 +72,7 @@ const addUser = async (formData) => {
 };
 const login = async (formData) => {
   try {
-    const response = await axios.post('http://localhost:8080/api/auth/authenticate', formData);
+    const response = await axios.post(`${urlBEAPI}/api/auth/authenticate`, formData);
     return response.data;
   } catch (error) {
     console.error('Error login data: ', error);
@@ -67,5 +81,5 @@ const login = async (formData) => {
 };
 
 export default {
-  getAllUsers, updateUser, getUserById, deleleUser, addUser, login
+  getAllUsers, updateUser, getUserById, deleteUser, addUser, login
 };

@@ -1,0 +1,1 @@
+export {default as ProFileView} from './profile-view'

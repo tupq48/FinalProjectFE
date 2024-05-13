@@ -108,7 +108,11 @@ export default function RegisterView() {
 
     // const { repeatPassword, ...saveData } = formData;
     // console.log('Form data:', saveData);
-    const response = await userService.addUser(formData);
+    const form = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+  form.append(key, value);
+});
+    const response = await userService.addUser(form);
     localStorage.setItem('accessToken', response.accessToken);
     alert('save done');
     console.log(response);
