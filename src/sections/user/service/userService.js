@@ -19,6 +19,7 @@ const getAllUsers = async () => {
     throw error;
   }
 };
+
 const updateUser = async (formDataUpdate) => {
   try {
     await axios.post(`${urlBEAPI}/api/user`, formDataUpdate, {
