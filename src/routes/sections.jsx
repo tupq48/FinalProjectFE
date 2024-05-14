@@ -29,14 +29,24 @@ export default function Router() {
       return false;
     }
   }
+  function isUser(token) {
+    try {
+      const decoded = jwtDecode(token);
+      return decoded.authorities && (decoded.authorities.includes('ROLE_USER')||decoded.authorities.includes('ROLE_ADMIN'));
+    } catch (e) {
+      console.error('Invalid token:', e);
+      return false;
+    }
+  }
   const location = useLocation();
   const token = localStorage.getItem('accessToken');
-  const userIsAdmin = isAdmin(token);
+  const personalIsAdmin = isAdmin(token);
+  const personalIsUser = isUser(token);
   // const isAdmin=true;
   const routes = useRoutes([
     {
       path: 'admin',
-      element: userIsAdmin ? (
+      element: personalIsAdmin ? (
         <DashboardLayout>
           <Suspense fallback={<div>Loading...</div>}>
             <Outlet />
@@ -58,12 +68,14 @@ export default function Router() {
       ],
     },
     {
-      element: (
+      element:personalIsUser?(
         <DashboardLayout>
           <Suspense>
             <Outlet />
           </Suspense>
         </DashboardLayout>
+      ) : (
+        <Navigate to="/login" state={{ from: location.pathname }} />
       ),
       children: [
         { element: <IndexPage />, index: true },
