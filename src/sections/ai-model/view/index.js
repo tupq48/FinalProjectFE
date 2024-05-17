@@ -1,0 +1,1 @@
+export { default as RegisterAiModelView } from './register-ai-model-view';

@@ -44,6 +44,18 @@ const navConfig = [
     role:'user'
   },
   {
+    title: 'profile',
+    path: 'profile',
+    icon: icon('ic_blog'),
+    role:'all'
+  },
+  {
+    title: 'AI model',
+    path: 'ai-model',
+    icon: icon('ic_blog'),
+    role:'user'
+  },
+  {
     title: 'login',
     path: '/login',
     icon: icon('ic_lock'),
