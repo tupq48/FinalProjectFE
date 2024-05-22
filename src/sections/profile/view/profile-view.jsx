@@ -149,6 +149,7 @@ export default function ProfileView() {
     formDataUpdate.forEach((value, key) => { formDataObj[key] = value; });
     delete formDataObj.id;
     delete formDataObj.urlImage;
+    delete formDataObj.image;
     const validationResult = schema.validate(formDataObj, { abortEarly: false });
     console.log(validationResult)
     if (validationResult.error) {
