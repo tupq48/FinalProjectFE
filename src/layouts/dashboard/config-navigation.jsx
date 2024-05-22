@@ -43,12 +43,12 @@ const navConfig = [
     icon: icon('ic_blog'),
     role:'user'
   },
-  {
-    title: 'profile',
-    path: 'profile',
-    icon: icon('ic_blog'),
-    role:'all'
-  },
+  // {
+  //   title: 'profile',
+  //   path: 'profile',
+  //   icon: icon('ic_blog'),
+  //   role:'all'
+  // },
   {
     title: 'login',
     path: '/login',

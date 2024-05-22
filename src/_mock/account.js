@@ -7,6 +7,7 @@ const account = {};
 
 if (token) {
   try {
+    console.log("token: ",token)
     const decoded = jwtDecode(token);
     const data = await userService.getUserById(decoded.id);
 
