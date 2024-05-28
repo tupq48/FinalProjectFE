@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { BlogView } from 'src/sections/blog/view';
+import { ActivityView } from 'src/sections/activity/view'; 
 
 // ----------------------------------------------------------------------
 
@@ -8,10 +8,10 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title> Blog | Minimal UI </title>
+        <title> Activity | Minimal UI </title>
       </Helmet>
 
-      <BlogView />
+      <ActivityView />
     </>
   );
 }

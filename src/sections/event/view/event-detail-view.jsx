@@ -22,6 +22,7 @@ import Iconify from 'src/components/iconify';
 import { isAdmin } from 'src/sections/urlAPI';
 
 import EventPopup from '../add-event';
+import RegistersManagePopup from '../RegistersManage';
 
 export default function EventDetailView() {
   const { id } = useParams();
@@ -40,6 +41,7 @@ export default function EventDetailView() {
   const [isUserRegistered, setIsUserRegistered] = useState(false);
   const [isClickButton, setIsClickButton] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openDialogManageRegister, setOpenDialogManageRegister] = useState(false);
 
   useEffect(() => {
     fetchData(id);
@@ -143,6 +145,16 @@ export default function EventDetailView() {
       Edit Event
     </Button>
   );
+  const renderListRegistrantsButton = () => (
+    <Button
+      variant="contained"
+      color="secondary"
+      startIcon={<Iconify icon="" />}
+      onClick={() => setOpenDialogManageRegister(true)}
+    >
+      List Registrants
+    </Button>
+  );
 
   const handleDeleteEvent = async () => {
     if (isClickButton) return;
@@ -185,12 +197,22 @@ export default function EventDetailView() {
 
     return renderRegisterEventButton();
   };
+  const renderListRegistrantsActionButton = () => {
+    if (isAdmin()) {
+      return renderListRegistrantsButton();
+    }
+    return  '';
+  }
+
 
   const renderPage = () => (
     <>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">{data.eventName}</Typography>
-        {renderEventActionButton()}
+        <Stack direction="row" spacing={2}>
+          {renderEventActionButton()}
+          {renderListRegistrantsActionButton()}
+        </Stack>
       </Stack>
       <Grid container spacing={2}>
         <Grid item xs={2} />
@@ -294,6 +316,13 @@ export default function EventDetailView() {
         label="Edit event"
         initialValues={data}
         onClose={() => setOpenDialog(false)}
+        onSubmitEvent={handleEditEvent}
+      />
+      <RegistersManagePopup
+        isOpen={openDialogManageRegister}
+        label="Manage Register"
+        initialValues={data}
+        onClose={() => setOpenDialogManageRegister(false)}
         onSubmitEvent={handleEditEvent}
       />
     </Container>

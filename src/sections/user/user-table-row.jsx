@@ -13,6 +13,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import { Stack, Dialog, TextField, DialogTitle, DialogActions, DialogContent, } from '@mui/material';
 
+import { schema } from 'src/utils/validation';
+
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
@@ -38,13 +40,16 @@ export default function UserTableRow({
     gmail: '',
     username: '',
     phoneNumber: '',
-    gender: '',
+    dateOfBirth:'',
+    address:''
   });
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
   const [openUpdateForm, setUpdateForm] = useState(false);
   // const [visible, setVisible] = useState(true);
   const [file, setFile] = useState(null);
   const [open, setOpen] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [, setLoading] = useState(false);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
@@ -60,9 +65,19 @@ export default function UserTableRow({
   const openDeletePopup = () => {
     setOpenDeleteConfirm(true);
   };
-  const openUpdatePopup = () => {
+  const openUpdatePopup = async () => {
+    try {
+      setLoading(true);
+      await findUserById(id);
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+      setLoading(false);
+    }
+    finally {
+      setLoading(false);
+    }
     setUpdateForm(true);
-    findUserById(id);
+
   };
   const closeUpdatePopup = () => {
     setUpdateForm(false);
@@ -80,6 +95,19 @@ export default function UserTableRow({
       console.error('Đã xảy ra lỗi khi đăng ký sự kiện:', error);
     }
   };
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const [, datePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('-');
+    console.log("day: ", day, "month: ", month, "year: ", year);
+    const formattedDateString = `${year}-${month}-${day}`;
+    const date = new Date(formattedDateString);  
+    const formattedYear = date.getFullYear();
+    const formattedMonth = String(date.getMonth() + 1).padStart(2, '0');
+    const formattedDay = String(date.getDate()).padStart(2, '0');
+    console.log("Formatted Date: ", `${formattedYear}-${formattedMonth}-${formattedDay}`);
+    return `${formattedYear}-${formattedMonth}-${formattedDay}`;
+  };
   const findUserById = async () => {
     try {
       const data = await userService.getUserById(id)
@@ -90,6 +118,7 @@ export default function UserTableRow({
         gmail: data.gmail,
         username: data.username,
         phoneNumber: data.phoneNumber,
+        dateOfBirth:formatDate(data.birthday),
       })
     } catch (error) {
       console.error('Error  get UserDetail data: ', error);
@@ -107,6 +136,21 @@ export default function UserTableRow({
     Object.entries(formData).forEach(([key, value]) => {
       formDataUpdate.append(key, value);
     });
+    const formDataObj = {};
+    formDataUpdate.forEach((value, key) => { formDataObj[key] = value; });
+    delete formDataObj.id;
+    delete formDataObj.urlImage;
+    delete formDataObj.image;
+    const validationResult = schema.validate(formDataObj, { abortEarly: false });
+    console.log(validationResult)
+    if (validationResult.error) {
+      const newErrors = {};
+      validationResult.error.details.forEach((detail) => {
+        newErrors[detail.context.key] = detail.message;
+      });
+      setErrors(newErrors);
+      return;
+    }
     try {
       const f = onSubmitUpdateUser(formDataUpdate);
       closeUpdatePopup();
@@ -115,6 +159,13 @@ export default function UserTableRow({
       console.error('Đã xảy ra lỗi khi đăng ký sự kiện:', error);
     }
   };
+  const handleDateChange = (event) => {
+    const { value } = event.target;
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      dateOfBirth: value
+    }));
+  }
 
   return (
     <>
@@ -169,17 +220,17 @@ export default function UserTableRow({
           <DialogTitle>User Update </DialogTitle>
           <DialogContent>
             <Stack spacing={2} margin={2}>
-              <TextField id="name" label="FullName" value={formData.name} onChange={handleChange} />
-              <TextField id="gmail" type='email' label="Gmail" value={formData.gmail} onChange={handleChange} />
-              <TextField id="username" label="UserName" value={formData.username} onChange={handleChange} />
+              <TextField id="name" label="FullName" value={formData.name} onChange={handleChange} error={!!errors.name}
+            helperText={errors.name} />
+              <TextField id="gmail" type='email' label="Gmail" value={formData.gmail} onChange={handleChange} error={!!errors.gmail}
+            helperText={errors.gmail} />
+              <TextField id="username" label="UserName" value={formData.username} onChange={handleChange} error={!!errors.username}
+            helperText={errors.username}/>
               <TextField id="phoneNumber" type='number' label="Phone Number"
-                value={formData.phoneNumber} onChange={handleChange} />
-              <TextField
-                id="gender"
-                label="Gender"
-                value={formData.gender}
-                onChange={handleChange}
-              />
+                value={formData.phoneNumber} onChange={handleChange} error={!!errors.phoneNumber}
+                helperText={errors.phoneNumber} />
+              <TextField id="dateOfBirth" type="date" label="Date of Birth" value={formData.dateOfBirth} onChange={handleDateChange} error={!!errors.dateOfBirth}
+            helperText={errors.dateOfBirth} fullWidth />
               <div>
               <Label htmlFor="avatar" style={{ fontSize: '20px', height:'0px' }}>Upload Avatar:</Label>
               <input type="file" label="Change Avatar" onChange={handleFileChange} />

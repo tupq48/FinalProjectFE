@@ -19,6 +19,37 @@ const getAllUsers = async () => {
     throw error;
   }
 };
+const getListOfEventRegistrants = async (id) => {
+  try {
+    const response = await axios.get(`${urlBEAPI}/api/user/getEventRegistrants?eventId=${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+    );
+
+    console.log("data: ", response);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data: ', error);
+    throw error;
+  }
+};
+const getListOfEventAttended = async (id) => {
+  try {
+    const response = await axios.get(`${urlBEAPI}/api/event/listAventAttended?user_id=${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+    );
+    console.log("dataAtt: ", response);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data: ', error);
+    throw error;
+  }
+};
 
 const updateUser = async (formDataUpdate) => {
   try {
@@ -61,6 +92,21 @@ const deleteUser = async (id) => {
     throw error;
   }
 };
+const removeRegistrantFromEvent = async (userId,eventId) => {
+  try {
+    const response = await axios.delete(`${urlBEAPI}/api/registration/removeRegistrantFromEvent?userId=${userId}&eventId=${eventId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    console.log("data: ", response);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data: ', error);
+    throw error;
+  }
+};
+
 const addUser = async (formData) => {
   try {
     const response = await axios.post(`${urlBEAPI}/api/auth/register`, formData);
@@ -82,5 +128,5 @@ const login = async (formData) => {
 };
 
 export default {
-  getAllUsers, updateUser, getUserById, deleteUser, addUser, login
+  getAllUsers, getListOfEventRegistrants, getListOfEventAttended, removeRegistrantFromEvent, updateUser, getUserById, deleteUser, addUser, login
 };

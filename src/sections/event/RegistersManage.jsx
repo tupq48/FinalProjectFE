@@ -1,34 +1,27 @@
-import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { toast   } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { toast, ToastContainer } from 'react-toastify';
+import React, { useState, useEffect } from 'react';
 
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
+import { Modal } from '@mui/material';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
-import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-import CircularProgress from '@mui/material/CircularProgress'; // Thêm CircularProgress
 
-import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
-import TableNoData from '../table-no-data';
-import UserTableRow from '../user-table-row';
-import UserTableHead from '../user-table-head';
-import TableEmptyRows from '../table-empty-rows';
-import userService from '../service/userService';
-import UserTableToolbar from '../user-table-toolbar';
-import UserRegistrationDialog from '../UserRegistrationDialog';
-import { emptyRows, applyFilter, getComparator } from '../utils';
+import TableNoData from '../user/table-no-data';
+import UserTableRow from '../user/user-table-row';
+import UserTableHead from '../user/user-table-head';
+import TableEmptyRows from '../user/table-empty-rows';
+import userService from '../user/service/userService';
+import UserTableToolbar from '../user/user-table-toolbar';
+import { emptyRows, applyFilter, getComparator } from '../user/utils' ;
 
-// ----------------------------------------------------------------------
 
-export default function UserPage() {
+
+function RegistersManagePopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -40,28 +33,13 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
-  const [open, openChange] = useState(false);
-  const [visible, setVisible] = useState(true);
-  const [formData, setFormData] = useState({
-    name: '',
-    gmail: '',
-    username: '',
-    password: '',
-    phoneNumber: '',
-    gender: '',
-  });
-  const functionOpenPopup = () => {
-    openChange(true);
-  };
-  const closePopup = () => {
-    openChange(false);
-  };
-  const fetchData = async () => {
+ 
+  const fetchData = async (id) => {
     try {
       setLoading(true);
-      const data = await userService.getAllUsers();
+      const data = await userService.getListOfEventRegistrants(id);
       setUsers(data);
     } catch (error) {
       console.error('Error fetching data: ', error);
@@ -73,8 +51,10 @@ export default function UserPage() {
 
   };
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (initialValues != null && initialValues.eventId != null) {
+      fetchData(initialValues.eventId);
+    }
+  }, [initialValues]);  
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {
@@ -129,47 +109,7 @@ export default function UserPage() {
     comparator: getComparator(order, orderBy),
     filterName,
   });
-  function formatDateTime(date) {
-    date = new Date(date);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-  }
-  const onSubmitUser = async (form) => {
-    const formAdd = new FormData();
-
-    Object.entries(form).forEach(([key, value]) => {
-      if (key === 'dateOfBirth') {
-        value = formatDateTime(value);
-      }
-      formAdd.append(key, value);
-    });
-     toast
-      .promise(userService.addUser(formAdd), {
-        pending: 'Đang xử lý...',
-        success: 'Thêm user đã được đăng ký thành công!',
-        error: 'Đã xảy ra lỗi khi đăng ký user!',
-      })
-      .then(async () => {
-        setUsers([]);
-        const data = await userService.getAllUsers();
-        setUsers(data);
-      });
-  };
-
   const notFound = !dataFiltered.length && !!filterName;
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.taget.name]: e.target.value });
-    //   setFormData((prevData) => ({
-    //     ...prevData,
-    //     [name]: value,
-    //   }));
-  };
   const onSubmitUpdateUser = async (formDataUpdate) => {
      toast
       .promise(userService.updateUser(formDataUpdate), {
@@ -183,57 +123,30 @@ export default function UserPage() {
   };
   const onDeleteUser = async (id) => {
     toast
-     .promise(userService.deleteUser(id), {
+     .promise(userService.removeRegistrantFromEvent(id,initialValues.eventId), {
        pending: 'Đang xử lý...',
-       success: 'Cập nhật user thành công!',
+       success: 'Delete user from event success!',
        error: 'Đã xảy ra lỗi khi cập nhật user!',
      })
      .then(async () => {
-       fetchData();      
+       fetchData(initialValues.eventId);      
      });
  };
 
   return (
-    <Container>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Users</Typography>
-
-        <Button
-          onClick={functionOpenPopup}
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-        >
-          New User
-        </Button>
-        <UserRegistrationDialog
-          open={open}
-          closePopup={closePopup}
-          formData={formData}
-          handleChange={handleChange}
-          onSubmitUser={onSubmitUser}
-          setVisible={setVisible}
-          visible={visible}
-        />
-      </Stack>
-      {loading && (
-        <Grid container justifyContent="center" alignItems="center" style={{ height: '70vh' }}>
-          <CircularProgress size={100} />
-        </Grid>
-      )}
-      <Card>
+      <Modal open={isOpen} onClose={onClose}>
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'white',
+          padding: '20px',
+          minWidth: '1000px',
+        }}
+      >
+        <h3 style={{ textAlign: 'center' }}>{initialValues ? 'List of Event Registrants' : label}</h3>
         <UserTableToolbar
           numSelected={selected.length}
           filterName={filterName}
@@ -242,7 +155,7 @@ export default function UserPage() {
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
+              <UserTableHead open={false}
                 order={order}
                 orderBy={orderBy}
                 rowCount={users.length}
@@ -282,11 +195,10 @@ export default function UserPage() {
                 />
 
                 {notFound && <TableNoData query={filterName} />}
-              </TableBody>
+              </TableBody> 
             </Table>
           </TableContainer>
         </Scrollbar>
-
         <TablePagination
           page={page}
           component="div"
@@ -296,7 +208,18 @@ export default function UserPage() {
           rowsPerPageOptions={[5, 10, 25]}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </Card>
-    </Container>
+        </div>
+      </Modal>
+    
   );
 }
+
+RegistersManagePopup.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSubmitEvent: PropTypes.func.isRequired,
+  initialValues: PropTypes.object,
+  label: PropTypes.string.isRequired,
+};
+
+export default RegistersManagePopup;

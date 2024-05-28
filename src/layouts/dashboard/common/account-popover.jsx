@@ -16,7 +16,7 @@ import  account  from 'src/_mock/account';
 
 const MENU_OPTIONS = [
   {
-    label: 'Blog',
+    label: 'Activity',
     icon: 'eva:home-fill',
   },
   {

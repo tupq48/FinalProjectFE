@@ -5,7 +5,7 @@ import { Outlet, Navigate, useRoutes, useLocation } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/dashboard';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
-export const BlogPage = lazy(() => import('src/pages/blog'));
+export const ActivityPage = lazy(() => import('src/pages/activity'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const EventDetailPage = lazy(() => import('src/pages/event-detail'));
 export const EventPage = lazy(() => import('src/pages/event'));
@@ -60,7 +60,7 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'event', element: <EventPage /> },
         { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
+        { path: 'activity', element: <ActivityPage /> },
         {
           path:'profile',
           element:<ProfilePage/>
@@ -86,7 +86,7 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'event', element: <UserEventPage /> },
         { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
+        { path: 'activity', element: <ActivityPage /> },
         { path: 'profile',element:<ProfilePage/>},
       ],
     },

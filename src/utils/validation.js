@@ -32,7 +32,6 @@ const schema = Joi.object({
       .max(10)
       .required(),
     address: Joi.string()
-    .required()
     .messages({
       'any.required': `address is a required field`
     }),
