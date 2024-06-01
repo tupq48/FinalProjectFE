@@ -26,7 +26,6 @@ export default function Router() {
       const decoded = jwtDecode(token);
       return decoded.authorities && decoded.authorities.includes('ROLE_ADMIN');
     } catch (e) {
-      console.error('Invalid token:', e);
       return false;
     }
   }
@@ -35,7 +34,6 @@ export default function Router() {
       const decoded = jwtDecode(token);
       return decoded.authorities && (decoded.authorities.includes('ROLE_USER')||decoded.authorities.includes('ROLE_ADMIN'));
     } catch (e) {
-      console.error('Invalid token:', e);
       return false;
     }
   }

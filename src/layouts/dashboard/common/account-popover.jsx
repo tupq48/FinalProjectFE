@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -10,7 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
-import  account  from 'src/_mock/account';
+import getUserInfo from 'src/_mock/account';
 
 // ----------------------------------------------------------------------
 
@@ -33,13 +33,21 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+  const [account, setAccount] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getUserInfo();
+      setAccount(data);
+    }
+    fetchData();
+  }, []);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
   const handleClose = () => {
-    console.log("vào nè")
    setOpen(null);
   };
 
@@ -66,7 +74,7 @@ export default function AccountPopover() {
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {account.displayName.charAt(0).toUpperCase()}
+          {account.displayName != null && account.displayName.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
