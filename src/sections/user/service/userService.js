@@ -2,8 +2,8 @@ import axios from 'axios';
 
 import urlBEAPI from 'src/sections/urlAPI';
 
-const accessToken = localStorage.getItem("accessToken");
 const getAllUsers = async () => {
+  const accessToken = localStorage.getItem("accessToken");
   try {
     const response = await axios.get(`${urlBEAPI}/api/user/getAll`, {
       headers: {
@@ -12,7 +12,6 @@ const getAllUsers = async () => {
     }
     );
 
-    console.log("data: ", response);
     return response.data;
   } catch (error) {
     console.error('Error fetching data: ', error);
@@ -20,6 +19,7 @@ const getAllUsers = async () => {
   }
 };
 const getListOfEventRegistrants = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
   try {
     const response = await axios.get(`${urlBEAPI}/api/user/getEventRegistrants?eventId=${id}`, {
       headers: {
@@ -28,7 +28,6 @@ const getListOfEventRegistrants = async (id) => {
     }
     );
 
-    console.log("data: ", response);
     return response.data;
   } catch (error) {
     console.error('Error fetching data: ', error);
@@ -36,14 +35,14 @@ const getListOfEventRegistrants = async (id) => {
   }
 };
 const getListOfEventAttended = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
   try {
-    const response = await axios.get(`${urlBEAPI}/api/event/listAventAttended?user_id=${id}`, {
+    const response = await axios.get(`${urlBEAPI}/api/event/listEventAttended?user_id=${id}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
     }
     );
-    console.log("dataAtt: ", response);
     return response.data;
   } catch (error) {
     console.error('Error fetching data: ', error);
@@ -52,6 +51,7 @@ const getListOfEventAttended = async (id) => {
 };
 
 const updateUser = async (formDataUpdate) => {
+  const accessToken = localStorage.getItem("accessToken");
   try {
     await axios.post(`${urlBEAPI}/api/user`, formDataUpdate, {
       headers: {
@@ -65,13 +65,14 @@ const updateUser = async (formDataUpdate) => {
   }
 };
 const getUserById = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await axios.get(`${urlBEAPI}/api/user/getUserById/${id}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
     });
-    console.log("User Detail: ", response);
     return response.data;
   } catch (error) {
     console.error('Error getUser data: ', error);
@@ -79,27 +80,28 @@ const getUserById = async (id) => {
   }
 };
 const deleteUser = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await axios.delete(`${urlBEAPI}/api/user/${id}/deleteBusiness/`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
     });
-    console.log("data: ", response);
     return response.data;
   } catch (error) {
     console.error('Error fetching data: ', error);
     throw error;
   }
 };
-const removeRegistrantFromEvent = async (userId,eventId) => {
+const removeRegistrantFromEvent = async (userId, eventId) => {
+  const accessToken = localStorage.getItem("accessToken");
   try {
     const response = await axios.delete(`${urlBEAPI}/api/registration/removeRegistrantFromEvent?userId=${userId}&eventId=${eventId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
     });
-    console.log("data: ", response);
     return response.data;
   } catch (error) {
     console.error('Error fetching data: ', error);
@@ -110,7 +112,6 @@ const removeRegistrantFromEvent = async (userId,eventId) => {
 const addUser = async (formData) => {
   try {
     const response = await axios.post(`${urlBEAPI}/api/auth/register`, formData);
-    console.log("data: ", response);
     return response.data;
   } catch (error) {
     console.error('Error fetching data: ', error);
@@ -118,6 +119,7 @@ const addUser = async (formData) => {
   }
 };
 const login = async (formData) => {
+
   try {
     const response = await axios.post(`${urlBEAPI}/api/auth/authenticate`, formData);
     return response.data;

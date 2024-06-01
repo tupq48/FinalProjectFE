@@ -79,7 +79,6 @@ export default function LoginView() {
 
     const loginResponse = userService.login(formData);
     const response = await loginResponse;
-    console.log(response.accessToken);
     localStorage.setItem('accessToken', response.accessToken);
     // router.push('/');
    navigate(from, { replace: true });

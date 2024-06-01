@@ -28,7 +28,6 @@ const isModelExist = async () => {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`
       }
     });
-    // return false;
     return response.data; 
   } catch (error) {
     console.error('Có lỗi xảy ra:', error);
