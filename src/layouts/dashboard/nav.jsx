@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -15,7 +15,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
-import account from 'src/_mock/account';
+import getUserInfo from 'src/_mock/account';
 
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
@@ -28,14 +28,23 @@ import navConfig from './config-navigation';
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
+  
+  const [account, setAccount] = useState([]);
+
   const pathname = usePathname();
 
   const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
+    const fetchData = async () => {
+      const userData = await getUserInfo();
+      setAccount(userData);
+    }
+
     if (openNav) {
       onCloseNav();
     }
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 

@@ -5,16 +5,11 @@ import urlBEAPI from 'src/sections/urlAPI';
 
 // ----------------------------------------------------------------------
 
-const accessToken = localStorage.getItem("accessToken");
 
-const config = {
-  headers: {
-      'Content-Type': 'multipart/form-data',
-      Authorization: `Bearer ${accessToken}`
-  }
-};
+
 
 const getEventsByPage = async (page = 1, pageSize = 8) => {
+  const accessToken = localStorage.getItem("accessToken");
   try {
     const url = `${urlBEAPI}/api/event?pageSize=${pageSize}&page=${page}`;
     // const url = `http://localhost:8080/api/event?pageSize=${pageSize}&page=${page}`;
@@ -23,7 +18,7 @@ const getEventsByPage = async (page = 1, pageSize = 8) => {
         Authorization: `Bearer ${accessToken}`
       }
     });
-    const { eventDtos, total } = response.data; 
+    const { eventDtos, total } = response.data;
     console.log(eventDtos);
     return {
       total,
@@ -39,6 +34,13 @@ const getEventsByPage = async (page = 1, pageSize = 8) => {
 };
 
 const registerEvent = async (eventData) => {
+  const accessToken = localStorage.getItem("accessToken");
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${accessToken}`
+    }
+  };
   try {
     const url = `${urlBEAPI}/api/event`;
     // const url = 'http://localhost:8080/api/event';
@@ -51,31 +53,45 @@ const registerEvent = async (eventData) => {
 };
 
 const updateEvent = async (eventData) => {
+  const accessToken = localStorage.getItem("accessToken");
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${accessToken}`
+    }
+  };
   try {
     const url = `${urlBEAPI}/api/event`;
     // const url = 'http://localhost:8080/api/event';
     const response = await axios.put(url, eventData, config);
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error('Có lỗi xảy ra khi đăng ký sự kiện:', error);
-    throw error; 
+    throw error;
   }
 };
 
 const deleteEvent = async (eventId) => {
-  try {
+  const accessToken = localStorage.getItem("accessToken");
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${accessToken}`
+    }
+  }; try {
     const url = `${urlBEAPI}/api/event`;
     // const url = 'http://localhost:8080/api/event';
-    const params = {  eventId }; // Truyền eventId vào phần queryParams
-    const response = await axios.delete(url, {  params, ...config });
-    return response.data; 
+    const params = { eventId }; // Truyền eventId vào phần queryParams
+    const response = await axios.delete(url, { params, ...config });
+    return response.data;
   } catch (error) {
     console.error('Có lỗi xảy ra khi xóa sự kiện:', error);
-    throw error; 
+    throw error;
   }
 }
 
 const getEventInfoById = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
   try {
     const url = `${urlBEAPI}/api/event/${id}`;
     // const url = `http://localhost:8080/api/event/${id}`;
@@ -84,12 +100,12 @@ const getEventInfoById = async (id) => {
         Authorization: `Bearer ${accessToken}`
       }
     });
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error('Có lỗi xảy ra khi đăng ký tham gia sự kiện:', error);
-    throw error; 
+    throw error;
   }
 }
 
-  
-export {deleteEvent, updateEvent, registerEvent, getEventsByPage, getEventInfoById };
+
+export { deleteEvent, updateEvent, registerEvent, getEventsByPage, getEventInfoById };

@@ -154,6 +154,7 @@ export default function ActivityView() {
               <TableContainer sx={{ overflow: 'unset' }}>
                 <Table sx={{ minWidth: 800 }}>
                   <UserTableHead open={false}
+                    noNeedCheckbox
                     headLabel={[
                       { id: 'eventName', label: 'Event Name' },
                       { id: 'startTime', label: 'Start Time' },
@@ -164,6 +165,7 @@ export default function ActivityView() {
                       { id: 'image', label: 'Upload Image' },
                       { id: '' },
                     ]}
+
                   />
                   <TableBody>
                     {events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
