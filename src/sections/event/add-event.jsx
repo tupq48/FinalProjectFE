@@ -128,6 +128,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
             <TextField
               label="Điểm"
               variant="outlined"
+              type="number"
               name="point"
               value={formData.point}
               onChange={(e) => handleChange('point', e.target.value)}
@@ -203,11 +204,12 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
               formData.imageUrls.length > 0 &&
               formData.imageUrls.map((item, index) => getImageLinkFromUrl(item, index))}
           </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" color="primary" onClick={handleSubmit}>
+              {initialValues ? 'Lưu' : 'Thêm'}
+            </Button>
+          </Grid>
         </Grid>
-
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
-          {initialValues ? 'Lưu' : 'Thêm'}
-        </Button>
       </div>
     </Modal>
   );

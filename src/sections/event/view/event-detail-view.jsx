@@ -7,8 +7,8 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import Container from '@mui/material/Container';
-import { CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { Tooltip, CircularProgress } from '@mui/material';
 
 import { deleteEvent, updateEvent, getEventInfoById } from 'src/_mock/events';
 import {
@@ -173,22 +173,43 @@ export default function EventDetailView() {
       });
   };
 
-  const renderDeleteEventButton = () => (
-    <Button
-      variant="contained"
-      color="error"
-      startIcon={<Iconify icon="" />}
-      onClick={() => {
-        handleDeleteEvent(id);
-      }}
-    >
-      Delete Event
-    </Button>
-  );
+  const convertTime = (time) => {
+    const [timeString, dateString] = time.split(' '); // Tách chuỗi thời gian và ngày
+    const [hours, minutes, seconds] = timeString.split(':'); // Tách giờ, phút và giây
+    const [day, month, year] = dateString.split('-'); // Tách ngày, tháng và năm
+    const resultTime = new Date(year, month - 1, day, hours, minutes, seconds);
+    return resultTime;
+  };
+
+  const renderDeleteEventButton = () => {
+    if (data.endTime == null || data.endtime === "")
+      return "";
+    if (convertTime(data.endTime) < Date.now()) {
+      return "";
+    }
+    return (
+      <Button
+        variant="contained"
+        color="error"
+        startIcon={<Iconify icon="" />}
+        onClick={() => {
+          handleDeleteEvent(id);
+        }}
+      >
+        Delete Event
+      </Button>
+    )
+  };
 
   const renderEventActionButton = () => {
     if (isAdmin()) {
       return renderEditEventButton();
+    }
+
+    if (data.endTime == null || data.endtime === "")
+      return "";
+    if (convertTime(data.startTime) < Date.now()) {
+      return "";
     }
 
     if (isUserRegistered) {
@@ -208,7 +229,23 @@ export default function EventDetailView() {
   const renderPage = () => (
     <>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">{data.eventName}</Typography>
+        <Typography variant="h4" style={{ maxWidth: '50%' }}>
+          <Tooltip title={data.eventName}>
+            <span
+              style={{
+                color: 'darkblue',
+                fontWeight: 'bold',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: 'inline-block',
+                width: '100%' 
+              }}
+            >
+              {data.eventName}
+            </span>
+          </Tooltip>
+        </Typography>
         <Stack direction="row" spacing={2}>
           {renderEventActionButton()}
           {renderListRegistrantsActionButton()}
@@ -285,7 +322,7 @@ export default function EventDetailView() {
       </Grid>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4"> </Typography>
-        {isAdmin() ? renderDeleteEventButton() : ''}
+        {isAdmin() ? (renderDeleteEventButton()) : ''}
       </Stack>
     </>
   );
