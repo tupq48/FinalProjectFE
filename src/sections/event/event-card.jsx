@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
-// import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 
 import Label from 'src/components/label';
 // ----------------------------------------------------------------------
@@ -85,27 +85,42 @@ export default function EventCard({ event }) {
 
           {renderImg}
         </Box>
-
-        <Stack spacing={2} sx={{ p: 3 }}>
-          <Stack direction="row" alignItems="center" justifyContent="center">
-            <span style={{ color: 'darkblue', fontWeight: 'bold' }}>{event.eventName}</span>
-          </Stack>
-          <Stack direction="row" alignItems="center" justifyContent="center">
-            <div style={{ ...timeStyle, fontWeight: 'bold' }}>
-              {format(convertTime(event.startTime), 'MMMM dd yyyy')}
-            </div>
-            <div style={{ padding: '4px' }} />
-            <div style={timeStyle}>{format(convertTime(event.startTime), 'hh:mm')}</div>
-          </Stack>
-          <Stack direction="row" alignItems="center" justifyContent="center">
-            <div style={{ ...timeStyle, fontWeight: 'bold' }}>
-              {format(convertTime(event.endTime), 'MMMM dd yyyy')}
-            </div>
-            <div style={{ padding: '4px' }} />
-            <div style={timeStyle}>{format(convertTime(event.endTime), 'hh:mm')}</div>
-          </Stack>
-        </Stack>
       </Link>
+
+      <Stack spacing={2} sx={{ p: 3 }}>
+        <Stack direction="row" alignItems="center" justifyContent="center">
+          {/* <span style={{ color: 'darkblue', fontWeight: 'bold' }}>{event.eventName}</span> */}
+          <Tooltip title={event.eventName}>
+          <span 
+            style={{ 
+              color: 'darkblue', 
+              fontWeight: 'bold', 
+              whiteSpace: 'nowrap', 
+              overflow: 'hidden', 
+              textOverflow: 'ellipsis', 
+              maxWidth: '200px', // Điều chỉnh kích thước theo yêu cầu
+              display: 'inline-block'
+            }}
+          >
+            {event.eventName}
+          </span>
+        </Tooltip>
+        </Stack>
+        <Stack direction="row" alignItems="center" justifyContent="center">
+          <div style={{ ...timeStyle, fontWeight: 'bold' }}>
+            {format(convertTime(event.startTime), 'MMMM dd yyyy')}
+          </div>
+          <div style={{ padding: '4px' }} />
+          <div style={timeStyle}>{format(convertTime(event.startTime), 'hh:mm')}</div>
+        </Stack>
+        <Stack direction="row" alignItems="center" justifyContent="center">
+          <div style={{ ...timeStyle, fontWeight: 'bold' }}>
+            {format(convertTime(event.endTime), 'MMMM dd yyyy')}
+          </div>
+          <div style={{ padding: '4px' }} />
+          <div style={timeStyle}>{format(convertTime(event.endTime), 'hh:mm')}</div>
+        </Stack>
+      </Stack>
     </Card>
   );
 }
