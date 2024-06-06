@@ -18,10 +18,10 @@ const getAllUsers = async () => {
     throw error;
   }
 };
-const getListOfEventRegistrants = async (id) => {
+const getListOfEventRegistrants = async (id,filterValue) => {
   const accessToken = localStorage.getItem("accessToken");
   try {
-    const response = await axios.get(`${urlBEAPI}/api/user/getEventRegistrants?eventId=${id}`, {
+    const response = await axios.get(`${urlBEAPI}/api/user/getEventRegistrants?eventId=${id}&filter-by=${filterValue}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }

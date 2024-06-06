@@ -106,6 +106,38 @@ const getEventInfoById = async (id) => {
     throw error;
   }
 }
+const getImagesUser = async (userId, eventId) => {
+  const accessToken = localStorage.getItem("accessToken");
+  try {
+    const url = `${urlBEAPI}/api/event/getImagesUser?userId=${userId}&eventId=${eventId}`;
+    // const url = `http://localhost:8080/api/event/${id}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    return response.data; 
+  } catch (error) {
+    console.error('Có lỗi xảy ra khi đăng ký tham gia sự kiện:', error);
+    throw error; 
+  }
+}
+const updateStatusRegistrants = async (eventId, userId, updateBy) => {
+  console.log("updateBy: " ,updateBy)
+  const accessToken = localStorage.getItem("accessToken");
+  try {
+    const url = `${urlBEAPI}/api/registration/updateStatusRegistrants?eventId=${eventId}&userId=${userId}&update-by=${updateBy}`;
+    // const url = 'http://localhost:8080/api/event';
+    const response = await axios.put(url,'', {headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+    return response.data; 
+  } catch (error) {
+    console.error('Có lỗi xảy ra khi xác nhận:', error);
+    throw error; 
+  }
+};
 
-
-export { deleteEvent, updateEvent, registerEvent, getEventsByPage, getEventInfoById };
+  
+export {deleteEvent, updateEvent, registerEvent, getImagesUser, getEventsByPage, getEventInfoById,updateStatusRegistrants };

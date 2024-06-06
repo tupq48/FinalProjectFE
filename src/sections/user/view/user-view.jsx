@@ -42,6 +42,7 @@ export default function UserPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
+  const [cloneUsers, setCloneUsers] = useState([]);
   const [open, openChange] = useState(false);
   const [visible, setVisible] = useState(true);
   const [formData, setFormData] = useState({
@@ -52,6 +53,7 @@ export default function UserPage() {
     phoneNumber: '',
     gender: '',
   });
+  let notFound;
   const functionOpenPopup = () => {
     openChange(true);
   };
@@ -63,6 +65,7 @@ export default function UserPage() {
       setLoading(true);
       const data = await userService.getAllUsers();
       setUsers(data);
+      setCloneUsers(data);
     } catch (error) {
       console.error('Error fetching data: ', error);
       setLoading(false);
@@ -83,14 +86,14 @@ export default function UserPage() {
     }
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  // const handleSelectAllClick = (event) => {
+  //   if (event.target.checked) {
+  //     const newSelecteds = users.map((n) => n.name);
+  //     setSelected(newSelecteds);
+  //     return;
+  //   }
+  //   setSelected([]);
+  // };
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -118,17 +121,18 @@ export default function UserPage() {
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
   };
-
-  const handleFilterByName = (event) => {
+  // let dataFiltered;
+  const handleFilterByName = async (event) => {
     setPage(0);
+    const filterValue = (event.target.value);
+    const dataFiltered = applyFilter({
+      inputData: cloneUsers,
+      comparator: getComparator(order, orderBy),
+      filterName: filterValue,
+    });
     setFilterName(event.target.value);
+    setUsers(dataFiltered);
   };
-
-  const dataFiltered = applyFilter({
-    inputData: users,
-    comparator: getComparator(order, orderBy),
-    filterName,
-  });
   function formatDateTime(date) {
     date = new Date(date);
     const year = date.getFullYear();
@@ -159,10 +163,10 @@ export default function UserPage() {
         setUsers([]);
         const data = await userService.getAllUsers();
         setUsers(data);
+        setCloneUsers(data);
       });
   };
 
-  const notFound = !dataFiltered.length && !!filterName;
   const handleChange = (e) => {
     setFormData({ ...formData, [e.taget.name]: e.target.value });
     //   setFormData((prevData) => ({
@@ -236,7 +240,7 @@ export default function UserPage() {
       <Card>
         <UserTableToolbar
           numSelected={selected.length}
-          filterName={filterName}
+          // filterName={filterName}
           onFilterName={handleFilterByName}
         />
         <Scrollbar>
@@ -248,7 +252,7 @@ export default function UserPage() {
                 rowCount={users.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
-                onSelectAllClick={handleSelectAllClick}
+                // onSelectAllClick={handleSelectAllClick}
                 headLabel={[
                   { id: 'name', label: 'Name' },
                   { id: 'email', label: 'Email' },

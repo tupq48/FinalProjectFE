@@ -324,6 +324,7 @@ export default function EventDetailView() {
         initialValues={data}
         onClose={() => setOpenDialogManageRegister(false)}
         onSubmitEvent={handleEditEvent}
+        EventId={id}
       />
     </Container>
   );
