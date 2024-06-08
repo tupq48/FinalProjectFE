@@ -53,9 +53,11 @@ export default function EventTableRow({
 
     if (imageUrl != null && imageUrl !== "") {
       if (status === "registered")
-        return <a href={imageUrl}>image</a>;
+        return <a href={imageUrl}>Waiting Admin Accept</a>;
       if (status === "attended")
-        return <a href={imageUrl}>accepted</a>;
+        return <a href={imageUrl}>Accepted</a>;
+      if (status === 'registered_but_not_attended')
+        return <a href={imageUrl}>Not Acceptted</a>
     }
 
     // So sánh thời gian hiện tại với startTime
@@ -98,7 +100,7 @@ export default function EventTableRow({
         </TableCell>
 
         <TableCell>
-          {status}
+          {status === "registered_but_not_attended" ? "Registered But Not Attended" : status}
         </TableCell>
 
         <TableCell>
