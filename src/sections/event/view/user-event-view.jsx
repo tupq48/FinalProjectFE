@@ -6,7 +6,6 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import TablePagination from '@mui/material/TablePagination';
-import { Select, MenuItem, FormControl } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress'; // Thêm CircularProgress
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
@@ -23,7 +22,6 @@ export default function EventPage() {
   const [eventsPerPage, setEventsPerPage] = useState(8);
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [filterValue, setFilterValue] = useState('all');
   useEffect(() => {
     fetchEvents();
   }, []);
@@ -63,12 +61,6 @@ export default function EventPage() {
     setLoading(false);
   };
 
-  const handleFilterChange = (event) => {
-    setFilterValue(event.target.value);
-    // Thực hiện các hành động phù hợp với giá trị filter mới
-    // Ví dụ: gọi hàm để lấy danh sách sự kiện dựa trên filter mới
-  };
-
   const onSubmitEvent = async (form) => {
     toast
       .promise(registerEvent(form), {
@@ -86,18 +78,6 @@ export default function EventPage() {
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Events</Typography>
-        <FormControl style={{ minWidth: '140px' }}>
-          <Select
-            labelId="event-filter"
-            id="event-filter-select"
-            value={filterValue}
-            onChange={handleFilterChange}
-          >
-            <MenuItem value="all">All</MenuItem>
-            <MenuItem value="upcoming">Upcoming</MenuItem>
-            <MenuItem value="registered">Registered</MenuItem>
-          </Select>
-        </FormControl>
       </Stack>
       {loading && (
         <Grid container justifyContent="center" alignItems="center" style={{ height: '70vh' }}>

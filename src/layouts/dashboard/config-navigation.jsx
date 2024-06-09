@@ -8,58 +8,40 @@ const icon = (name) => (
 
 const navConfig = [
   {
-    title: 'dashboard',
-    path: '/',
-    icon: icon('ic_analytics'),
-    role: 'all',
-  },
-  {
-    title: 'user',
-    path: '/admin/user',
-    icon: icon('ic_user'),
-    role: 'admin',
-  },
-  {
     title: 'event',
     path: '/admin/event',
     icon: icon('ic_event'),
     role: 'admin',
   },
   {
-    title: 'event',
+    title: 'User',
+    path: '/admin/user',
+    icon: icon('ic_user'),
+    role: 'admin',
+  },
+  {
+    title: 'Event',
     path: '/event',
     icon: icon('ic_event'),
     role: 'user',
   },
   {
-    title: 'product',
-    path: '/admin/products',
-    icon: icon('ic_cart'),
-    role:'user'
-  },
-  {
-    title: 'blog',
-    path: '/admin/blog',
-    icon: icon('ic_blog'),
-    role:'user'
-  },
-  {
-    title: 'profile',
+    title: 'Profile',
     path: 'profile',
     icon: icon('ic_blog'),
     role:'all'
   },
   {
-    title: 'AI model',
-    path: 'ai-model',
+    title: 'Activity',
+    path: 'activity',
     icon: icon('ic_blog'),
     role:'user'
   },
   {
-    title: 'login',
-    path: '/login',
-    icon: icon('ic_lock'),
-    role: 'all',
+    title: 'Model AI',
+    path: 'ai-model',
+    icon: icon('ic_blog'),
+    role:'user'
   },
   {
     title: 'Not found',

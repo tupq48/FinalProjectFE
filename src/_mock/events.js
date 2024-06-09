@@ -19,7 +19,6 @@ const getEventsByPage = async (page = 1, pageSize = 8) => {
       }
     });
     const { eventDtos, total } = response.data;
-    console.log(eventDtos);
     return {
       total,
       events: eventDtos,

@@ -21,16 +21,19 @@ export const RegisterAIModelPage = lazy(() => import('src/pages/ai-model'));
 // ----------------------------------------------------------------------
 
 export default function Router() {
-  function isAdmin(token) {
+  function isAdmin() {
     try {
+    const token = localStorage.getItem('accessToken');
+
       const decoded = jwtDecode(token);
       return decoded.authorities && decoded.authorities.includes('ROLE_ADMIN');
     } catch (e) {
       return false;
     }
   }
-  function isUser(token) {
+  function isUser() {
     try {
+    const token = localStorage.getItem('accessToken');
       const decoded = jwtDecode(token);
       return decoded.authorities && (decoded.authorities.includes('ROLE_USER')||decoded.authorities.includes('ROLE_ADMIN'));
     } catch (e) {
@@ -38,11 +41,15 @@ export default function Router() {
     }
   }
   const location = useLocation();
-  const token = localStorage.getItem('accessToken');
-  const personalIsAdmin = isAdmin(token);
-  const personalIsUser = isUser(token);
+  const personalIsAdmin = isAdmin();
+  const personalIsUser = isUser();
   // const isAdmin=true;
+
   const routes = useRoutes([
+    {
+      path: '/',
+      element: <Navigate to={personalIsAdmin ? "/admin/event" : "/event"} replace />,
+    },
     {
       path: 'admin',
       element: personalIsAdmin ? (
@@ -55,22 +62,17 @@ export default function Router() {
         <Navigate to="/login" state={{ from: location.pathname }} />
       ),
       children: [
-        { element: <IndexPage />, index: true },
+        { path: 'event', element: <EventPage />, index: true },
         { path: 'user', element: <UserPage /> },
-        { path: 'event', element: <EventPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'activity', element: <ActivityPage /> },
-        {
-          path:'profile',
-          element:<ProfilePage/>
-        },
-        
+        { path: 'profile', element: <ProfilePage /> },
       ],
     },
     {
-      element:personalIsUser?(
+      element: personalIsUser ? (
         <DashboardLayout>
-          <Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
@@ -78,20 +80,13 @@ export default function Router() {
         <Navigate to="/login" state={{ from: location.pathname }} />
       ),
       children: [
-        { element: <IndexPage />, index: true },
-        {
-          path: 'event/:id',
-          element: <EventDetailPage />,
-        },
+        { path: 'event', element: <UserEventPage />, index: true },
+        { path: 'event/:id', element: <EventDetailPage /> },
         { path: 'user', element: <UserPage /> },
-        { path: 'event', element: <UserEventPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'activity', element: <ActivityPage /> },
-        { path: 'profile',element:<ProfilePage/>},
-        {
-          path:'ai-model',
-          element:<RegisterAIModelPage/>
-        }
+        { path: 'profile', element: <ProfilePage /> },
+        { path: 'ai-model', element: <RegisterAIModelPage /> },
       ],
     },
     {
@@ -111,6 +106,7 @@ export default function Router() {
       element: <Navigate to="/404" replace />,
     },
   ]);
+  
 
   return routes;
 }

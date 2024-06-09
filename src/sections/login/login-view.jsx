@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { useState } from 'react';
-import {useNavigate,useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -15,8 +15,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
-// import { useRouter } from 'src/routes/hooks';
-
 import { bgGradient } from 'src/theme/css';
 
 import Logo from 'src/components/logo';
@@ -28,7 +26,7 @@ import userService from '../user/service/userService';
 const schema = Joi.object({
   username: Joi.string().alphanum().min(3).max(50).required(),
   password: Joi.string()
-    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,50}$/)
+    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[ \-/:-@\\[-`{-~]?).{6,64}$/)
     .strict()
     .required()
     .messages({
@@ -42,13 +40,13 @@ export default function LoginView() {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
-  // const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,6 +60,9 @@ export default function LoginView() {
       ...prevData,
       [name]: value,
     }));
+
+    // Xóa thông báo lỗi server khi người dùng nhập dữ liệu
+    setServerError('');
   };
 
   const handleSubmit = async () => {
@@ -77,12 +78,17 @@ export default function LoginView() {
       return;
     }
 
-    const loginResponse = userService.login(formData);
-    const response = await loginResponse;
-    localStorage.setItem('accessToken', response.accessToken);
-    // router.push('/');
-   navigate(from, { replace: true });
-    // router.push(redirectTo);
+    try {
+      const loginResponse = await userService.login(formData);
+      localStorage.setItem('accessToken', loginResponse.accessToken);
+      navigate(from, { replace: true });
+    } catch (error) {
+      if (error.response && error.response.status === 500) {
+        setServerError('Sai tên đăng nhập hoặc mật khẩu');
+      } else {
+        setServerError('Đã xảy ra lỗi. Vui lòng thử lại.');
+      }
+    }
   };
 
   const renderForm = (
@@ -116,6 +122,12 @@ export default function LoginView() {
           }}
         />
       </Stack>
+
+      {serverError && (
+        <Typography color="error" sx={{ mt: 2 }}>
+          {serverError}
+        </Typography>
+      )}
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
         <Link variant="subtitle2" underline="hover">
