@@ -158,6 +158,7 @@ function RegistersManagePopup({ isOpen, onClose, onSubmitEvent, initialValues, l
             <MenuItem value="0">All</MenuItem>
             <MenuItem value="1">Predicted</MenuItem>
             <MenuItem value="2">Not Predicted</MenuItem>
+            <MenuItem value="3">Accepted</MenuItem>
           </Select>
         </FormControl>
       </Stack>

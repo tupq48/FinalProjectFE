@@ -42,7 +42,7 @@ export default function ImageGallery({ eventId, UserId }) {
         </Grid>
       )}
       <Carousel
-        autoPlay
+        // autoPlay
         animation="slide"
         navButtonsAlwaysVisible
         timeout={500}
