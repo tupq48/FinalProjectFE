@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import ImageList from '@mui/material/ImageList';
 import IconButton from '@mui/material/IconButton';
+import ClearIcon from '@mui/icons-material/Clear';
 import ImageListItem from '@mui/material/ImageListItem';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 
 function srcset(image, width, height, rows = 1, cols = 1) {
@@ -59,7 +59,7 @@ export default function CustomImageList({ imageUrls, handleDeleteImage }) {
                                     sx={{ color: 'white' }}
                                 //   aria-label='star'
                                 >
-                                    <StarBorderIcon/>
+                                    <ClearIcon/>
                                 </IconButton>
                             }
                             actionPosition="left"

@@ -28,19 +28,19 @@ const navConfig = [
   {
     title: 'Profile',
     path: 'profile',
-    icon: icon('ic_blog'),
+    icon: icon('ic_profile'),
     role:'all'
   },
   {
     title: 'Activity',
     path: 'activity',
-    icon: icon('ic_blog'),
+    icon: icon('ic_activity'),
     role:'user'
   },
   {
     title: 'Model AI',
     path: 'ai-model',
-    icon: icon('ic_blog'),
+    icon: icon('ic_ai'),
     role:'user'
   },
   {

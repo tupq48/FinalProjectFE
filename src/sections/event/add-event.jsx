@@ -83,6 +83,17 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
       const f = onSubmitEvent(form);
       onClose();
       await f;
+      setFormData({
+        point: 0,
+        maxAttenders: 0,
+        eventName: '',
+        location: '',
+        description: '',
+        startTime: null,
+        endTime: null,
+        imageUrls: [],
+      });
+      setSelectedImages([]);
     } catch (error) {
       console.error('Đã xảy ra lỗi khi đăng ký sự kiện:', error);
     }
@@ -177,6 +188,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
                 label="Thời gian bắt đầu"
                 value={formData.startTime}
                 onChange={(value) => handleChange('startTime', value)}
+                minDate={dayjs()}
                 sx={{ width: '100%' }}
               />
             </LocalizationProvider>
@@ -187,6 +199,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
                 label="Thời gian kết thúc"
                 value={formData.endTime}
                 onChange={(value) => handleChange('endTime', value)}
+                minDateTime={formData.startTime || dayjs()}
                 sx={{ width: '100%' }}
               />
             </LocalizationProvider>

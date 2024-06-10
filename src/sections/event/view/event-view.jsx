@@ -70,6 +70,7 @@ export default function EventPage() {
   };
 
   const onSubmitEvent = async (form) => {
+    console.log(form);
     toast
       .promise(registerEvent(form), {
         pending: 'Đang xử lý...',

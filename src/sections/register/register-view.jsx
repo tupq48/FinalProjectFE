@@ -276,7 +276,7 @@ export default function RegisterView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign up to Minimal</Typography>
+          <Typography variant="h4">Sign up</Typography>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Already have an account?
