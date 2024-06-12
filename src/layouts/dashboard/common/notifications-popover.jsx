@@ -2,6 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { set, sub } from 'date-fns';
 import { faker } from '@faker-js/faker';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -20,18 +21,22 @@ import ListItemButton from '@mui/material/ListItemButton';
 
 import { fToNow } from 'src/utils/format-time';
 
+import { readNotification } from 'src/_mock/notification';
+
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
+
 
 // ----------------------------------------------------------------------
 
 const NOTIFICATIONS = [
   {
     id: faker.string.uuid(),
-    title: 'Your order is placed',
-    description: 'waiting for shipping',
-    avatar: null,
-    type: 'order_placed',
+    eventId : 60,
+    title: 'New event',
+    description: 'waiting for you',
+    avatar: "https://i.ibb.co/8gjX8q3/images.jpg",
+    type: null,
     createdAt: set(new Date(), { hours: 10, minutes: 30 }),
     isUnRead: true,
   },
@@ -97,6 +102,7 @@ export default function NotificationsPopover() {
     );
   };
 
+  console.log(NOTIFICATIONS);
   return (
     <>
       <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen}>
@@ -123,7 +129,7 @@ export default function NotificationsPopover() {
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="subtitle1">Notifications</Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              You have {totalUnRead} unread messages
+              You have {totalUnRead} unread notifications
             </Typography>
           </Box>
 
@@ -147,12 +153,12 @@ export default function NotificationsPopover() {
               </ListSubheader>
             }
           >
-            {notifications.slice(0, 2).map((notification) => (
+            {notifications.slice(0, 5).map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
           </List>
 
-          <List
+          {/* <List
             disablePadding
             subheader={
               <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
@@ -163,7 +169,7 @@ export default function NotificationsPopover() {
             {notifications.slice(2, 5).map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
-          </List>
+          </List> */}
         </Scrollbar>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -189,11 +195,20 @@ NotificationItem.propTypes = {
     description: PropTypes.string,
     type: PropTypes.string,
     avatar: PropTypes.any,
+    eventId: PropTypes.any
   }),
 };
 
 function NotificationItem({ notification }) {
   const { avatar, title } = renderContent(notification);
+  const navigate = useNavigate();
+
+  const handleMarkAsRead = async (id) => {
+    const awaiter = readNotification(id);
+    notification.isUnRead = false;
+    navigate(`/event/${notification.eventId}`);
+    await awaiter;
+  }
 
   return (
     <ListItemButton
@@ -205,6 +220,7 @@ function NotificationItem({ notification }) {
           bgcolor: 'action.selected',
         }),
       }}
+      onClick={() => handleMarkAsRead(notification.id)}
     >
       <ListItemAvatar>
         <Avatar sx={{ bgcolor: 'background.neutral' }}>{avatar}</Avatar>
