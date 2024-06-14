@@ -49,6 +49,21 @@ const getListOfEventAttended = async (id) => {
     throw error;
   }
 };
+const getTopUsersByEventPoints = async (searchString) => {
+  const accessToken = localStorage.getItem("accessToken");
+  try {
+      const response = await axios.get(`${urlBEAPI}/api/user/getTopUsersByEventPoints?${searchString}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data: ', error);
+    throw error;
+  }
+};
 
 const updateUser = async (formDataUpdate) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -130,5 +145,5 @@ const login = async (formData) => {
 };
 
 export default {
-  getAllUsers, getListOfEventRegistrants, getListOfEventAttended, removeRegistrantFromEvent, updateUser, getUserById, deleteUser, addUser, login
+  getAllUsers, getListOfEventRegistrants, getListOfEventAttended, getTopUsersByEventPoints, removeRegistrantFromEvent, updateUser, getUserById, deleteUser, addUser, login
 };

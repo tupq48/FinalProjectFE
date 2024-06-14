@@ -87,7 +87,7 @@ export default function EventDetailView() {
     <Button
       variant="contained"
       color="success"
-      startIcon={<Iconify icon="eva:plus-fill" />}
+      startIcon={<Iconify icon="medical-icon:i-registration" />}
       onClick={() => handleRegistrationEvent()}
     >
       Register Event
@@ -115,7 +115,7 @@ export default function EventDetailView() {
     <Button
       variant="contained"
       color="secondary"
-      startIcon={<Iconify icon="" />}
+      startIcon={<Iconify icon="material-symbols-light:cancel-rounded" />}
       onClick={() => handleCancelRegistration()}
     >
       Cancel Registration
@@ -139,7 +139,7 @@ export default function EventDetailView() {
     <Button
       variant="contained"
       color="secondary"
-      startIcon={<Iconify icon="" />}
+      startIcon={<Iconify icon="eva:edit-fill" />}
       onClick={() => setOpenDialog(true)}
     >
       Edit Event
@@ -149,7 +149,7 @@ export default function EventDetailView() {
     <Button
       variant="contained"
       color="secondary"
-      startIcon={<Iconify icon="" />}
+      startIcon={<Iconify icon="eva:list-fill" />}
       onClick={() => setOpenDialogManageRegister(true)}
     >
       List Registrants
@@ -191,7 +191,7 @@ export default function EventDetailView() {
       <Button
         variant="contained"
         color="error"
-        startIcon={<Iconify icon="" />}
+        startIcon={<Iconify icon="material-symbols:delete" />}
         onClick={() => {
           handleDeleteEvent(id);
         }}
