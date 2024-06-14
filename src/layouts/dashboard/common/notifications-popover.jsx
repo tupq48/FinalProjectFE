@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { set, sub } from 'date-fns';
-import { faker } from '@faker-js/faker';
+
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { parse, subHours, formatDistanceToNow } from 'date-fns';
 
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -19,7 +19,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 
-import { fToNow } from 'src/utils/format-time';
+import { getNotification, readNotification, readAllNotification } from 'src/_mock/notification';
 
 import { readNotification } from 'src/_mock/notification';
 
@@ -29,57 +29,8 @@ import Scrollbar from 'src/components/scrollbar';
 
 // ----------------------------------------------------------------------
 
-const NOTIFICATIONS = [
-  {
-    id: faker.string.uuid(),
-    eventId : 60,
-    title: 'New event',
-    description: 'waiting for you',
-    avatar: "https://i.ibb.co/8gjX8q3/images.jpg",
-    type: null,
-    createdAt: set(new Date(), { hours: 10, minutes: 30 }),
-    isUnRead: true,
-  },
-  {
-    id: faker.string.uuid(),
-    title: faker.person.fullName(),
-    description: 'answered to your comment on the Minimal',
-    avatar: '/assets/images/avatars/avatar_2.jpg',
-    type: 'friend_interactive',
-    createdAt: sub(new Date(), { hours: 3, minutes: 30 }),
-    isUnRead: true,
-  },
-  {
-    id: faker.string.uuid(),
-    title: 'You have new message',
-    description: '5 unread messages',
-    avatar: null,
-    type: 'chat_message',
-    createdAt: sub(new Date(), { days: 1, hours: 3, minutes: 30 }),
-    isUnRead: false,
-  },
-  {
-    id: faker.string.uuid(),
-    title: 'You have new mail',
-    description: 'sent from Guido Padberg',
-    avatar: null,
-    type: 'mail',
-    createdAt: sub(new Date(), { days: 2, hours: 3, minutes: 30 }),
-    isUnRead: false,
-  },
-  {
-    id: faker.string.uuid(),
-    title: 'Delivery processing',
-    description: 'Your order is being shipped',
-    avatar: null,
-    type: 'order_shipped',
-    createdAt: sub(new Date(), { days: 3, hours: 3, minutes: 30 }),
-    isUnRead: false,
-  },
-];
-
 export default function NotificationsPopover() {
-  const [notifications, setNotifications] = useState(NOTIFICATIONS);
+  const [notifications, setNotifications] = useState([]);
 
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
 
@@ -89,17 +40,32 @@ export default function NotificationsPopover() {
     setOpen(event.currentTarget);
   };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const notifi = await getNotification();
+      setNotifications(notifi);
+    } catch (error) {
+      console.error('Error fetching data in notification popover:', error);
+    }
+  };
+
   const handleClose = () => {
     setOpen(null);
   };
 
-  const handleMarkAllAsRead = () => {
+  const handleMarkAllAsRead = async () => {
     setNotifications(
       notifications.map((notification) => ({
         ...notification,
         isUnRead: false,
       }))
     );
+    const awaiter = readAllNotification();
+    await awaiter;
   };
 
   console.log(NOTIFICATIONS);
@@ -208,7 +174,17 @@ function NotificationItem({ notification }) {
     notification.isUnRead = false;
     navigate(`/event/${notification.eventId}`);
     await awaiter;
-  }
+  };
+
+  const formatDateToNow = (createdAt) => {
+    // Định dạng chuỗi ban đầu
+    const parsedDate = parse(createdAt, 'HH:mm:ss dd-MM-yyyy', new Date());
+    // Trừ đi 7 giờ
+    const adjustedDate = subHours(parsedDate, -7);
+    // Tính khoảng cách thời gian từ thời điểm hiện tại
+    return formatDistanceToNow(adjustedDate, { addSuffix: true });
+  };
+
 
   return (
     <ListItemButton
@@ -238,7 +214,7 @@ function NotificationItem({ notification }) {
             }}
           >
             <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />
-            {fToNow(notification.createdAt)}
+            {formatDateToNow(notification.createdAt)}
           </Typography>
         }
       />
