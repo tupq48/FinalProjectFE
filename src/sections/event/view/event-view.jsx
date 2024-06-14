@@ -17,6 +17,7 @@ import Iconify from 'src/components/iconify';
 
 import EventCard from '../event-card';
 import EventPopup from '../add-event';
+import TopUsersByEventPoints from '../TopUsersByEventPoints';
 
 export default function EventPage() {
   const [page, setPage] = useState(0);
@@ -25,6 +26,7 @@ export default function EventPage() {
   const [eventsPerPage, setEventsPerPage] = useState(8);
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openDialogTopUsers, setOpenDialogTopUsers] = useState(false);
 
   useEffect(() => {
     fetchEvents();
@@ -68,6 +70,9 @@ export default function EventPage() {
   const handleOpenDialog = (event) => {
     setOpenDialog(true);
   };
+  const handleOpenDialogTopUsers = (event) => {
+    setOpenDialogTopUsers(true);
+  };
 
   const onSubmitEvent = async (form) => {
     console.log(form);
@@ -87,6 +92,15 @@ export default function EventPage() {
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Events</Typography>
+        <Stack direction="row" spacing={2}>
+        <Button
+          variant="contained"
+          color="success"
+          startIcon={<Iconify icon="eva:people-outline" />}
+          onClick={handleOpenDialogTopUsers}
+        >
+          Top Users By Event Point
+        </Button>
         <Button
           variant="contained"
           color="inherit"
@@ -95,6 +109,7 @@ export default function EventPage() {
         >
           New Event
         </Button>
+        </Stack>
       </Stack>
       {loading && (
         <Grid container justifyContent="center" alignItems="center" style={{ height: '70vh' }}>
@@ -122,9 +137,17 @@ export default function EventPage() {
       </Card>
       <EventPopup
         isOpen={openDialog}
-        label="add event"
+        label="Add Event"
         onClose={() => setOpenDialog(false)}
         onSubmitEvent={onSubmitEvent}
+      />
+      <TopUsersByEventPoints
+        isOpen={openDialogTopUsers}
+        label="Top 10 Users By Event Point"
+        // initialValues={data}
+        onClose={() => setOpenDialogTopUsers(false)}
+        // onSubmitEvent={handleEditEvent}
+        // EventId={id}
       />
       <ToastContainer
         position="top-right"

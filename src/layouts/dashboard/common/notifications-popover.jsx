@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { parse, subHours, formatDistanceToNow } from 'date-fns';
@@ -20,8 +21,11 @@ import ListItemButton from '@mui/material/ListItemButton';
 
 import { getNotification, readNotification, readAllNotification } from 'src/_mock/notification';
 
+import { readNotification } from 'src/_mock/notification';
+
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
+
 
 // ----------------------------------------------------------------------
 
@@ -64,6 +68,7 @@ export default function NotificationsPopover() {
     await awaiter;
   };
 
+  console.log(NOTIFICATIONS);
   return (
     <>
       <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen}>
@@ -156,7 +161,7 @@ NotificationItem.propTypes = {
     description: PropTypes.string,
     type: PropTypes.string,
     avatar: PropTypes.any,
-    eventId: PropTypes.any,
+    eventId: PropTypes.any
   }),
 };
 
@@ -179,6 +184,7 @@ function NotificationItem({ notification }) {
     // Tính khoảng cách thời gian từ thời điểm hiện tại
     return formatDistanceToNow(adjustedDate, { addSuffix: true });
   };
+
 
   return (
     <ListItemButton

@@ -218,7 +218,7 @@ export default function UserPage() {
           onClick={functionOpenPopup}
           variant="contained"
           color="inherit"
-          startIcon={<Iconify icon="eva:plus-fill" />}
+          startIcon={<Iconify icon="eva:person-add-fill" />}
         >
           New User
         </Button>
