@@ -1,4 +1,5 @@
 import axios from 'axios';
+import FormData from 'form-data';
 
 import urlBEAPI from 'src/sections/urlAPI';
 
@@ -12,11 +13,38 @@ const isTrainningModel = async () => {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`
       }
-    });
+    }); 
     return response.data; 
   } catch (error) {
     console.error('Có lỗi xảy ra:', error);
     return false;
+  }
+};
+
+
+const testModel = async (image) => {
+  const formData = new FormData();
+  formData.append('image', image[0]);
+
+  try {
+    const response = await axios.post(`${urlBEAPI}/api/ai-model/checkModel`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const predicted = response.data;
+      console.log(predicted);
+      if (!predicted)
+        throw new Error('Model không nhận diện được khuôn mặt trong ảnh');
+      return true;
+    }
+    return null;
+  } catch (error) {
+    console.error('Có lỗi xảy ra:', error);
+    throw error;
   }
 };
 
@@ -44,7 +72,6 @@ const getTrainningImage = async () => {
       }
     });
     const urls = response.data.map(item => item.urlImage);
-    console.log(urls);
     return urls; 
   } catch (error) {
     console.error('Có lỗi xảy ra:', error);
@@ -54,7 +81,6 @@ const getTrainningImage = async () => {
 
 
 const uploadImageTrain = async (files) => {
-  console.log(files);
 
   const formData = new FormData();
   files.forEach(file => {
@@ -120,4 +146,4 @@ const trainModel = async () => {
     return false;
   }
 }
-export { trainModel, deleteImage, isModelExist, uploadImageTrain, isTrainningModel, getTrainningImage };
+export { testModel, trainModel, deleteImage, isModelExist, uploadImageTrain, isTrainningModel, getTrainningImage };

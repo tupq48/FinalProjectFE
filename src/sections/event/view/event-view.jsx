@@ -93,22 +93,22 @@ export default function EventPage() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Events</Typography>
         <Stack direction="row" spacing={2}>
-        <Button
-          variant="contained"
-          color="success"
-          startIcon={<Iconify icon="eva:people-outline" />}
-          onClick={handleOpenDialogTopUsers}
-        >
-          Top Users By Event Point
-        </Button>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-          onClick={handleOpenDialog}
-        >
-          New Event
-        </Button>
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={<Iconify icon="eva:people-outline" />}
+            onClick={handleOpenDialogTopUsers}
+          >
+            Top Users By Event Point
+          </Button>
+          <Button
+            variant="contained"
+            color="inherit"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            onClick={handleOpenDialog}
+          >
+            New Event
+          </Button>
         </Stack>
       </Stack>
       {loading && (
