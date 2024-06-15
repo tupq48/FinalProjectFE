@@ -14,7 +14,15 @@ import CircularProgress from '@mui/material/CircularProgress'; // Thêm Circular
 import Iconify from 'src/components/iconify';
 
 import CustomImageList from './CustomImageList';
-import { trainModel, deleteImage, isModelExist, isTrainningModel, uploadImageTrain, getTrainningImage } from '../api/ai-model-api';
+import {
+  testModel,
+  trainModel,
+  deleteImage,
+  isModelExist,
+  isTrainningModel,
+  uploadImageTrain,
+  getTrainningImage,
+} from '../api/ai-model-api';
 
 export default function RegisterAiModelView() {
   const [isOpenPopup, setIsOpenPopup] = useState(false);
@@ -39,34 +47,45 @@ export default function RegisterAiModelView() {
 
       const listImageFetched = await getTrainningImage();
       setListImage(listImageFetched);
-
     } catch (error) {
       console.error('Error fetching data in ai model view:', error);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
-
   const handleImageChange = (e) => {
-    if (isClicking)
-      return;
+    if (isClicking) return;
 
     const files = Array.from(e.target.files);
-    if (files.length === 0)
-      return;
+    if (files.length === 0) return;
     setIsClicking(true);
-    toast.promise(
-      uploadImageTrain(files),
-      {
+    toast
+      .promise(uploadImageTrain(files), {
         pending: 'Đang xử lý...',
         success: 'Upload ảnh thành công!',
         error: 'Đã xảy ra lỗi khi upload hình ảnh!',
-      }
-    ).then((newImages) => {
-      setListImage(prevImages => [...prevImages, ...newImages]);
-    })
+      })
+      .then((newImages) => {
+        setListImage((prevImages) => [...prevImages, ...newImages]);
+      })
+      .finally(() => {
+        setIsClicking(false);
+      });
+  };
+
+  const handleTestModel = (e) => {
+    if (isClicking) return;
+
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    setIsClicking(true);
+    toast
+      .promise(testModel(files), {
+        pending: 'Đang xử lý...',
+        success: 'Model nhận diện thành công!',
+        error: 'Model không thể nhận diện được bạn trong ảnh!',
+      })
       .finally(() => {
         setIsClicking(false);
       });
@@ -98,20 +117,14 @@ export default function RegisterAiModelView() {
 
   const renderButton = () => {
     if (isTrainning) {
-      return (
-        renderButtonDetail('Your model is trainning', null, "secondary")
-      );
+      return renderButtonDetail('Your model is trainning', null, 'secondary');
     }
     if (!hasModel) {
-      return (
-        renderButtonDetail('Start train model', handleStartTrainModel, "secondary")
-      )
+      return renderButtonDetail('Start train model', handleStartTrainModel, 'secondary');
     }
 
     if (hasModel) {
-      return (
-        renderButtonDetail("Retrain model", handleStartTrainModel, "secondary")
-      )
+      return renderButtonDetail('Retrain model', handleStartTrainModel, 'secondary');
     }
     return null;
   };
@@ -121,58 +134,50 @@ export default function RegisterAiModelView() {
       toast.error('You need at least 5 images to start training the model.');
       return;
     }
-    if (isClicking)
-      return;
+    if (isClicking) return;
     setIsClicking(true);
-    toast.promise(
-      trainModel(),
-      {
+    toast
+      .promise(trainModel(), {
         pending: 'Đang tiến hành xây dựng model...',
         success: 'Xây dựng model thành công!',
         error: 'Đã xảy ra lỗi trong quá trình xây dựng model!',
-      }
-    ).then(() => {
-      setHasModel(true);
-    })
+      })
+      .then(() => {
+        setHasModel(true);
+      })
       .finally(() => {
         setIsClicking(false);
       });
-  }
+  };
 
   const handleDeleteImage = async (imageUrls) => {
-    if (isClicking)
-      return;
+    if (isClicking) return;
 
     setIsClicking(true);
-    toast.promise(
-      deleteImage(imageUrls),
-      {
+    toast
+      .promise(deleteImage(imageUrls), {
         pending: 'Đang xử lý...',
         success: 'Xóa ảnh thành công!',
         error: 'Đã xảy ra lỗi khi xóa hình ảnh!',
-      }
-    ).then(() => {
-      setListImage(prevImages => prevImages.filter(url => !imageUrls.includes(url)));
-    })
+      })
+      .then(() => {
+        setListImage((prevImages) => prevImages.filter((url) => !imageUrls.includes(url)));
+      })
       .finally(() => {
         setIsClicking(false);
       });
-  }
+  };
 
-  const renderButtonDetail = (message, onClick, color) =>
-    <Button
-      variant="contained"
-      color={color}
-      startIcon={<Iconify icon="" />}
-      onClick={onClick}
-    >
+  const renderButtonDetail = (message, onClick, color) => (
+    <Button variant="contained" color={color} startIcon={<Iconify icon="" />} onClick={onClick}>
       {message}
     </Button>
+  );
 
   const renderListUploadedImages = () =>
-    CustomImageList({ "imageUrls": listImage, handleDeleteImage });
+    CustomImageList({ imageUrls: listImage, handleDeleteImage });
 
-  const renderFormUploadImage = () =>
+  const renderFormUploadImage = () => (
     <Box
       sx={{
         border: '2px dashed #90CAF9',
@@ -180,7 +185,7 @@ export default function RegisterAiModelView() {
         padding: '16px',
         textAlign: 'center',
         width: '300px',
-        margin: '20px auto'
+        margin: '20px auto',
       }}
     >
       <CloudUploadIcon sx={{ fontSize: '48px', color: '#90CAF9' }} />
@@ -190,12 +195,37 @@ export default function RegisterAiModelView() {
       <Typography variant="body1" color="textSecondary">
         HOẶC
       </Typography>
-      <Button variant="contained" component="label" sx={{ marginTop: '8px', marginBottom: '16px' }} disabled={isClicking}  >
+      <Button
+        variant="contained"
+        component="label"
+        sx={{ marginTop: '8px', marginBottom: '16px' }}
+        disabled={isClicking}
+      >
         Tải lên
         <input type="file" hidden multiple accept="image/*" onChange={handleImageChange} />
       </Button>
-
     </Box>
+  );
+
+  const renderButtonCheckModel = () => {
+    if (hasModel)
+      return (
+        <Button
+          variant="contained"
+          component="label"
+          sx={{ marginTop: '8px', marginBottom: '16px' }}
+          disabled={isClicking}
+          style={{
+            marginLeft: 'auto',
+            marginRight: '0',
+          }}
+        >
+          Test your model
+          <input type="file" hidden accept="image/*" onChange={handleTestModel} />
+        </Button>
+      );
+    return '';
+  };
 
   return (
     <Container>
@@ -212,6 +242,7 @@ export default function RegisterAiModelView() {
           {renderPopup()}
           {renderFormUploadImage()}
           {renderListUploadedImages()}
+          {renderButtonCheckModel()}
         </>
       )}
 
@@ -229,5 +260,4 @@ export default function RegisterAiModelView() {
       />
     </Container>
   );
-
 }
