@@ -8,7 +8,7 @@ export default function EventPage() {
   return (
     <>
       <Helmet>
-        <title> Event | Minimal UI </title>
+        <title> Event | HĐCĐ </title>
       </Helmet>
 
       <EventView />

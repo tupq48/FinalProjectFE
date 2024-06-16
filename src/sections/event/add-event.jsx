@@ -8,7 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
+function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label, isEdit }) {
   const [formData, setFormData] = useState(
     initialValues || {
       point: 0,
@@ -188,7 +188,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
                 label="Thời gian bắt đầu"
                 value={formData.startTime}
                 onChange={(value) => handleChange('startTime', value)}
-                minDate={dayjs()}
+                minDate={!isEdit ? dayjs() : null}
                 sx={{ width: '100%' }}
               />
             </LocalizationProvider>
@@ -199,7 +199,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label }) {
                 label="Thời gian kết thúc"
                 value={formData.endTime}
                 onChange={(value) => handleChange('endTime', value)}
-                minDateTime={formData.startTime || dayjs()}
+                minDateTime={!isEdit ? formData.startTime || dayjs() : formData.startTime}
                 sx={{ width: '100%' }}
               />
             </LocalizationProvider>
@@ -234,6 +234,7 @@ EventPopup.propTypes = {
   onSubmitEvent: PropTypes.func.isRequired,
   initialValues: PropTypes.object,
   label: PropTypes.string.isRequired,
+  isEdit: PropTypes.bool,
 };
 
 export default EventPopup;

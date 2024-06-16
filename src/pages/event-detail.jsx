@@ -8,7 +8,7 @@ export default function EventDetailPage() {
   return (
     <>
       <Helmet>
-        <title> Event Detail | Minimal UI </title>
+        <title> Event Detail | HĐCĐ </title>
       </Helmet>
 
       <EventDetailView />
