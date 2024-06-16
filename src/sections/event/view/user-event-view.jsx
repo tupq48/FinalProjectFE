@@ -10,7 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress'; // Thêm Circular
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
 
-import { Button } from '@mui/material';
+import { Button, FormControl, MenuItem, Select } from '@mui/material';
 
 import { registerEvent, getEventsByPage } from 'src/_mock/events';
 
@@ -28,6 +28,7 @@ export default function EventPage() {
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [openDialogTopUsers, setOpenDialogTopUsers] = useState(false);
+  const [filterValue, setFilterValue] = useState('0');
   useEffect(() => {
     fetchEvents();
   }, []);
@@ -82,6 +83,9 @@ export default function EventPage() {
   const handleOpenDialogTopUsers = (event) => {
     setOpenDialogTopUsers(true);
   };
+  const handleFilterChange = (event) => {
+    setFilterValue(event.target.value);
+  };
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -97,6 +101,23 @@ export default function EventPage() {
         </Button>
         </Stack>
       </Stack>
+      <Grid item xs={6} style={{}}>
+    <Stack direction="row" alignItems="center" justifyContent="flex-end">
+      <FormControl style={{ minWidth: '140px', marginBottom:'20px' }}>
+        <Select
+          labelId="event-filter"
+          id="event-filter-select"
+          value={filterValue}
+          onChange={handleFilterChange}
+        >
+          <MenuItem value="0">All</MenuItem>
+          <MenuItem value="1">On Going</MenuItem> 
+          <MenuItem value="2">Upcoming</MenuItem>
+          <MenuItem value="3">Completed</MenuItem>
+        </Select>
+      </FormControl>
+    </Stack>
+  </Grid>
       {loading && (
         <Grid container justifyContent="center" alignItems="center" style={{ height: '70vh' }}>
           <CircularProgress size={100} />

@@ -15,6 +15,7 @@ import { registerEvent, getEventsByPage } from 'src/_mock/events';
 
 import Iconify from 'src/components/iconify';
 
+import { FormControl, MenuItem, Select } from '@mui/material';
 import EventCard from '../event-card';
 import EventPopup from '../add-event';
 import TopUsersByEventPoints from '../TopUsersByEventPoints';
@@ -27,11 +28,14 @@ export default function EventPage() {
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [openDialogTopUsers, setOpenDialogTopUsers] = useState(false);
+  const [filterValue, setFilterValue] = useState('0');
 
   useEffect(() => {
     fetchEvents();
   }, []);
-
+  const handleFilterChange = (event) => {
+    setFilterValue(event.target.value);
+  };
   const fetchEvents = async () => {
     try {
       setLoading(true);
@@ -111,6 +115,23 @@ export default function EventPage() {
           </Button>
         </Stack>
       </Stack>
+      <Grid item xs={6} style={{}}>
+    <Stack direction="row" alignItems="center" justifyContent="flex-end">
+      <FormControl style={{ minWidth: '140px', marginBottom:'20px' }}>
+        <Select
+          labelId="event-filter"
+          id="event-filter-select"
+          value={filterValue}
+          onChange={handleFilterChange}
+        >
+          <MenuItem value="0">All</MenuItem>
+          <MenuItem value="1">On Going</MenuItem> 
+          <MenuItem value="2">Upcoming</MenuItem>
+          <MenuItem value="3">Completed</MenuItem>
+        </Select>
+      </FormControl>
+    </Stack>
+  </Grid>
       {loading && (
         <Grid container justifyContent="center" alignItems="center" style={{ height: '70vh' }}>
           <CircularProgress size={100} />
