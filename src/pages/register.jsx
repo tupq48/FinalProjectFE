@@ -8,7 +8,7 @@ export default function RegisterPage() {
   return (
     <>
       <Helmet>
-        <title> Register | Minimal UI </title>
+        <title> Register | HĐCĐ </title>
       </Helmet>
 
       <RegisterView />

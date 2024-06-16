@@ -53,11 +53,11 @@ export default function EventTableRow({
 
     if (imageUrl != null && imageUrl !== "") {
       if (status === "registered")
-        return <a href={imageUrl}>Waiting Admin Accept</a>;
+        return <a href={imageUrl} target="_blank" rel="noopener noreferrer">Waiting Admin Accept</a>;
       if (status === "attended")
-        return <a href={imageUrl}>Accepted</a>;
+        return <a href={imageUrl} target="_blank" rel="noopener noreferrer">Accepted</a>;
       if (status === 'registered_but_not_attended')
-        return <a href={imageUrl}>Not Acceptted</a>
+        return <a href={imageUrl} target="_blank" rel="noopener noreferrer">Not Acceptted</a>
     }
 
     // So sánh thời gian hiện tại với startTime

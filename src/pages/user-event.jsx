@@ -8,7 +8,7 @@ export default function UserEventPage() {
   return (
     <>
       <Helmet>
-        <title> Event | Minimal UI </title>
+        <title> Event | HĐCĐ </title>
       </Helmet>
 
       <UserEventView />

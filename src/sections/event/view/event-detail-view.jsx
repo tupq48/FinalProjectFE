@@ -22,6 +22,7 @@ import Iconify from 'src/components/iconify';
 import { isAdmin } from 'src/sections/urlAPI';
 
 import EventPopup from '../add-event';
+import DeleteEventPopup from '../detete-event-popup';
 import RegistersManagePopup from '../RegistersManage';
 
 export default function EventDetailView() {
@@ -41,6 +42,7 @@ export default function EventDetailView() {
   const [isUserRegistered, setIsUserRegistered] = useState(false);
   const [isClickButton, setIsClickButton] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openDialogManageRegister, setOpenDialogManageRegister] = useState(false);
 
   useEffect(() => {
@@ -182,10 +184,9 @@ export default function EventDetailView() {
   };
 
   const renderDeleteEventButton = () => {
-    if (data.endTime == null || data.endtime === "")
-      return "";
+    if (data.endTime == null || data.endtime === '') return '';
     if (convertTime(data.endTime) < Date.now()) {
-      return "";
+      return '';
     }
     return (
       <Button
@@ -193,12 +194,13 @@ export default function EventDetailView() {
         color="error"
         startIcon={<Iconify icon="material-symbols:delete" />}
         onClick={() => {
-          handleDeleteEvent(id);
+          // handleDeleteEvent(id);
+          setOpenDeleteDialog(true);
         }}
       >
         Delete Event
       </Button>
-    )
+    );
   };
 
   const renderEventActionButton = () => {
@@ -206,10 +208,9 @@ export default function EventDetailView() {
       return renderEditEventButton();
     }
 
-    if (data.endTime == null || data.endtime === "")
-      return "";
+    if (data.endTime == null || data.endtime === '') return '';
     if (convertTime(data.startTime) < Date.now()) {
-      return "";
+      return '';
     }
 
     if (isUserRegistered) {
@@ -222,9 +223,8 @@ export default function EventDetailView() {
     if (isAdmin()) {
       return renderListRegistrantsButton();
     }
-    return  '';
-  }
-
+    return '';
+  };
 
   const renderPage = () => (
     <>
@@ -239,7 +239,7 @@ export default function EventDetailView() {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 display: 'inline-block',
-                width: '100%' 
+                width: '100%',
               }}
             >
               {data.eventName}
@@ -322,7 +322,7 @@ export default function EventDetailView() {
       </Grid>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4"> </Typography>
-        {isAdmin() ? (renderDeleteEventButton()) : ''}
+        {isAdmin() ? renderDeleteEventButton() : ''}
       </Stack>
     </>
   );
@@ -354,7 +354,9 @@ export default function EventDetailView() {
         initialValues={data}
         onClose={() => setOpenDialog(false)}
         onSubmitEvent={handleEditEvent}
+        isEdit
       />
+
       <RegistersManagePopup
         isOpen={openDialogManageRegister}
         label="Manage Register"
@@ -362,6 +364,13 @@ export default function EventDetailView() {
         onClose={() => setOpenDialogManageRegister(false)}
         onSubmitEvent={handleEditEvent}
         EventId={id}
+      />
+
+      <DeleteEventPopup
+        isOpen={openDeleteDialog}
+        label="Are you sure to delete this event?"
+        onClose={() => setOpenDeleteDialog(false)}
+        onDeleteEvent={handleDeleteEvent}
       />
     </Container>
   );
