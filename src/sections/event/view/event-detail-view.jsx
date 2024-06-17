@@ -137,16 +137,23 @@ export default function EventDetailView() {
       });
   };
 
-  const renderEditEventButton = () => (
-    <Button
-      variant="contained"
-      color="secondary"
-      startIcon={<Iconify icon="eva:edit-fill" />}
-      onClick={() => setOpenDialog(true)}
-    >
-      Edit Event
-    </Button>
-  );
+  const renderEditEventButton = () => {
+    if (data.endTime == null || data.endtime === '') return '';
+    if (convertTime(data.endTime) < Date.now()) {
+      return '';
+    }
+    
+    return (
+      <Button
+        variant="contained"
+        color="secondary"
+        startIcon={<Iconify icon="eva:edit-fill" />}
+        onClick={() => setOpenDialog(true)}
+      >
+        Edit Event
+      </Button>
+    );
+  }
   const renderListRegistrantsButton = () => (
     <Button
       variant="contained"

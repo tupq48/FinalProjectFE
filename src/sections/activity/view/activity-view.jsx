@@ -8,10 +8,8 @@ import { Grid, Table, TableBody, TableContainer, TablePagination, CircularProgre
 
 import Scrollbar from 'src/components/scrollbar';
 
-import { emptyRows } from 'src/sections/user/utils';
 import UserTableHead from 'src/sections/user/user-table-head';
 import userService from 'src/sections/user/service/userService';
-import TableEmptyRows from 'src/sections/user/table-empty-rows';
 import { isModelExist } from 'src/sections/ai-model/api/ai-model-api';
 
 import EventTableRow from '../event-table-row';
@@ -165,7 +163,6 @@ export default function ActivityView() {
                       { id: 'image', label: 'Upload Image' },
                       { id: '' },
                     ]}
-
                   />
                   <TableBody>
                     {events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
@@ -186,23 +183,19 @@ export default function ActivityView() {
                         handleUploadProofImage={handleUploadProofImage}
                       />
                     ))}
-                    <TableEmptyRows
-                      height={77}
-                      emptyRows={emptyRows(page, rowsPerPage, events.length)}
-                    />
                   </TableBody>
                 </Table>
               </TableContainer>
+              <TablePagination
+                page={page}
+                component="div"
+                count={events.length}
+                rowsPerPage={rowsPerPage}
+                onPageChange={handleChangePage}
+                rowsPerPageOptions={[5, 10, 25]}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
             </Scrollbar>
-            <TablePagination
-              page={page}
-              component="div"
-              count={events.length}
-              rowsPerPage={rowsPerPage}
-              onPageChange={handleChangePage}
-              rowsPerPageOptions={[5, 10, 25]}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
           </>
         )}
       </Container>
