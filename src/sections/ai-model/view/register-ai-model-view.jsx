@@ -190,10 +190,10 @@ export default function RegisterAiModelView() {
     >
       <CloudUploadIcon sx={{ fontSize: '48px', color: '#90CAF9' }} />
       <Typography variant="h6" gutterBottom>
-        Kéo và thả tệp vào đây
+      Drag and drop the file here      
       </Typography>
       <Typography variant="body1" color="textSecondary">
-        HOẶC
+        or
       </Typography>
       <Button
         variant="contained"
@@ -201,7 +201,7 @@ export default function RegisterAiModelView() {
         sx={{ marginTop: '8px', marginBottom: '16px' }}
         disabled={isClicking}
       >
-        Tải lên
+        Upload
         <input type="file" hidden multiple accept="image/*" onChange={handleImageChange} />
       </Button>
     </Box>
@@ -220,7 +220,7 @@ export default function RegisterAiModelView() {
             marginRight: '0',
           }}
         >
-          Test your model
+          Test your detect face
           <input type="file" hidden accept="image/*" onChange={handleTestModel} />
         </Button>
       );
@@ -230,7 +230,7 @@ export default function RegisterAiModelView() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">AI Model</Typography>
+        <Typography variant="h4">Identification</Typography>
         {renderButton()}
       </Stack>
       {loading ? (

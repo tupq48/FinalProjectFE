@@ -38,7 +38,7 @@ const navConfig = [
     role:'user'
   },
   {
-    title: 'Model AI',
+    title: 'Identification',
     path: 'ai-model',
     icon: icon('ic_ai'),
     role:'user'

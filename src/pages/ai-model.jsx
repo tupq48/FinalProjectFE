@@ -8,7 +8,7 @@ export default function ProfilePage() {
   return (
     <>
       <Helmet>
-        <title> AI Model | HĐCĐ </title>
+        <title> Identification | HĐCĐ </title>
       </Helmet>
 
       <RegisterAiModelView />
