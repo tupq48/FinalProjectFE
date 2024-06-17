@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -11,11 +11,12 @@ import CircularProgress from '@mui/material/CircularProgress'; // Thêm Circular
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
 
-import { registerEvent, getEventsByPage } from 'src/_mock/events';
+import { Select, MenuItem , FormControl  } from '@mui/material';
+
+import { registerEvent, getEventsByPage, getEventsByStatus } from 'src/_mock/events';
 
 import Iconify from 'src/components/iconify';
 
-import { FormControl, MenuItem, Select } from '@mui/material';
 import EventCard from '../event-card';
 import EventPopup from '../add-event';
 import TopUsersByEventPoints from '../TopUsersByEventPoints';
@@ -30,16 +31,15 @@ export default function EventPage() {
   const [openDialogTopUsers, setOpenDialogTopUsers] = useState(false);
   const [filterValue, setFilterValue] = useState('0');
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-  const handleFilterChange = (event) => {
-    setFilterValue(event.target.value);
-  };
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     try {
       setLoading(true);
-      const fetchedEvents = await getEventsByPage(1);
+      let fetchedEvents;
+      if (filterValue === 0) {
+        fetchedEvents = await getEventsByPage(1);
+      } else {
+        fetchedEvents = await getEventsByStatus(1, 8, filterValue);
+      }
       setEvents(fetchedEvents.events);
       setTotalEvent(fetchedEvents.total);
     } catch (error) {
@@ -47,12 +47,39 @@ export default function EventPage() {
     } finally {
       setLoading(false);
     }
+  }, [filterValue]);
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
+  // useEffect(() => {
+  //   fetchEvents();
+  // }, []);
+  const handleFilterChange = (event) => {
+    setFilterValue(event.target.value);
   };
+  // const fetchEvents = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const fetchedEvents = await getEventsByPage(1);
+  //     setEvents(fetchedEvents.events);
+  //     setTotalEvent(fetchedEvents.total);
+  //   } catch (error) {
+  //     console.error('Error fetching events:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleChangePage = async (event, newPage) => {
     setLoading(true);
     setEvents([]);
-    const data = await getEventsByPage(newPage + 1, eventsPerPage);
+    // const data = await getEventsByPage(newPage + 1, eventsPerPage);
+    let data;
+    if (filterValue === 0) {
+      data = await getEventsByPage(newPage + 1, eventsPerPage);
+    } else {
+      data = await getEventsByStatus(newPage+ 1, eventsPerPage, filterValue);
+    }
     setEvents(data.events);
     setTotalEvent(data.total);
     setPage(newPage);
@@ -65,7 +92,13 @@ export default function EventPage() {
     setEvents([]);
     const newEventsPerPage = parseInt(event.target.value, 10);
     setEventsPerPage(newEventsPerPage);
-    const data = await getEventsByPage(1, newEventsPerPage);
+    // const data = await getEventsByPage(1, newEventsPerPage);
+    let data;
+    if (filterValue === 0) {
+      data = await getEventsByPage(1, newEventsPerPage);
+    } else {
+      data = await getEventsByStatus(1, newEventsPerPage, filterValue);
+    }
     setEvents(data.events);
     setTotalEvent(data.total);
     setLoading(false);

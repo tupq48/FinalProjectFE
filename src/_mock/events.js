@@ -31,6 +31,30 @@ const getEventsByPage = async (page = 1, pageSize = 8) => {
     };
   }
 };
+const getEventsByStatus = async (page = 1, pageSize = 8, filterBy = 0) => {
+  console.log("filterBy: ", filterBy);
+  const accessToken = localStorage.getItem("accessToken");
+  try {
+    const url = `${urlBEAPI}/api/event/getEventByStatus?pageSize=${pageSize}&page=${page}&filter_by=${filterBy}`;
+    // const url = `http://localhost:8080/api/event?pageSize=${pageSize}&page=${page}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    const { eventDtos, total } = response.data;
+    return {
+      total,
+      events: eventDtos,
+    };
+  } catch (error) {
+    console.error('Có lỗi xảy ra:', error);
+    return {
+      total: 0,
+      events: [],
+    };
+  }
+};
 
 const registerEvent = async (eventData) => {
   const accessToken = localStorage.getItem("accessToken");
@@ -139,4 +163,4 @@ const updateStatusRegistrants = async (eventId, userId, updateBy) => {
 };
 
   
-export {deleteEvent, updateEvent, registerEvent, getImagesUser, getEventsByPage, getEventInfoById,updateStatusRegistrants };
+export {deleteEvent, updateEvent, registerEvent, getImagesUser, getEventsByPage, getEventInfoById, getEventsByStatus, updateStatusRegistrants  };
