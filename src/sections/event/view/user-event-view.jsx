@@ -50,30 +50,11 @@ export default function EventPage() {
     fetchEvents();
   }, [fetchEvents]);
 
-  // const fetchEvents = async (fil) => {
-  //   try {
-  //     setLoading(true);
-  //     let fetchedEvents;
-  //     if(fil === 0)
-  //     fetchedEvents = await getEventsByPage(1);
-  //   else{
-  //     fetchedEvents = await getEventsByStatus(1,8,fil);
-  //   }
-  //     setEvents(fetchedEvents.events);
-  //     setTotalEvent(fetchedEvents.total);
-  //   } catch (error) {
-  //     console.error('Error fetching events:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   
 
   const handleChangePage = async (event, newPage) => {
     setLoading(true);
     setEvents([]);
-    console.log("filter ChangePage: ", filterValue)
-    // const data = await getEventsByPage(newPage + 1, eventsPerPage);
     let data;
     if (filterValue === 0) {
       data = await getEventsByPage(newPage + 1, eventsPerPage);
@@ -92,8 +73,6 @@ export default function EventPage() {
     setEvents([]);
     const newEventsPerPage = parseInt(event.target.value, 10);
     setEventsPerPage(newEventsPerPage);
-    console.log("filter ChangeEventsPerPage: ", filterValue)
-    // const data = await getEventsByPage(1, newEventsPerPage);
     let data;
     if (filterValue === 0) {
       data = await getEventsByPage(1, newEventsPerPage);

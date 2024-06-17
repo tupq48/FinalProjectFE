@@ -51,29 +51,13 @@ export default function EventPage() {
   useEffect(() => {
     fetchEvents();
   }, [fetchEvents]);
-  // useEffect(() => {
-  //   fetchEvents();
-  // }, []);
   const handleFilterChange = (event) => {
     setFilterValue(event.target.value);
   };
-  // const fetchEvents = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const fetchedEvents = await getEventsByPage(1);
-  //     setEvents(fetchedEvents.events);
-  //     setTotalEvent(fetchedEvents.total);
-  //   } catch (error) {
-  //     console.error('Error fetching events:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleChangePage = async (event, newPage) => {
     setLoading(true);
     setEvents([]);
-    // const data = await getEventsByPage(newPage + 1, eventsPerPage);
     let data;
     if (filterValue === 0) {
       data = await getEventsByPage(newPage + 1, eventsPerPage);
@@ -92,7 +76,6 @@ export default function EventPage() {
     setEvents([]);
     const newEventsPerPage = parseInt(event.target.value, 10);
     setEventsPerPage(newEventsPerPage);
-    // const data = await getEventsByPage(1, newEventsPerPage);
     let data;
     if (filterValue === 0) {
       data = await getEventsByPage(1, newEventsPerPage);
