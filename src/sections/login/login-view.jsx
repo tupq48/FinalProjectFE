@@ -84,9 +84,9 @@ export default function LoginView() {
       navigate(from, { replace: true });
     } catch (error) {
       if (error.response && error.response.status === 500) {
-        setServerError('Sai tên đăng nhập hoặc mật khẩu');
+        setServerError('Incorrect username or password');
       } else {
-        setServerError('Đã xảy ra lỗi. Vui lòng thử lại.');
+        setServerError('An error occurred. Please try again.');
       }
     }
   };

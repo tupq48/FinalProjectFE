@@ -74,9 +74,9 @@ export default function EventDetailView() {
     setIsClickButton(true);
     toast
       .promise(registrationEvent(id), {
-        pending: 'Đang xử lý...',
-        success: 'Đăng ký thành công!',
-        error: 'Đã xảy ra lỗi khi đăng ký sự kiện!',
+        pending: 'Processing...',
+        success: 'Registration successful!',
+        error: 'An error occurred while registering for the event!',
       })
       .then(() => {
         setIsUserRegistered(true);
@@ -101,9 +101,9 @@ export default function EventDetailView() {
     setIsClickButton(true);
     toast
       .promise(cancelRegistration(id), {
-        pending: 'Đang xử lý...',
-        success: 'Hủy thành công!',
-        error: 'Đã xảy ra lỗi khi hủy sự kiện!',
+        pending: 'Processing...',
+        success: 'Canceled successfully!',
+        error: 'An error occurred while canceling the event!',
       })
       .then(() => {
         setIsUserRegistered(false);
@@ -128,9 +128,9 @@ export default function EventDetailView() {
     form.append('eventId', id);
     toast
       .promise(updateEvent(form), {
-        pending: 'Đang xử lý...',
-        success: 'Sự kiện đã được sửa đổi thành công!',
-        error: 'Đã xảy ra lỗi khi sửa đổi sự kiện!',
+        pending: 'Processing...',
+        success: 'The event has been successfully modified!',
+        error: 'An error occurred while modifying the event!',
       })
       .then(() => {
         fetchData(id);
@@ -170,9 +170,9 @@ export default function EventDetailView() {
     setIsClickButton(true);
     toast
       .promise(deleteEvent(id), {
-        pending: 'Đang xử lý...',
-        success: 'Xóa sự kiện thành công!',
-        error: 'Đã xảy ra lỗi khi xóa sự kiện!',
+        pending: 'Processing...',
+        success: 'Event deleted successfully!',
+        error: 'An error occurred while deleting the event!',
       })
       .finally(() => {
         setIsClickButton(false);

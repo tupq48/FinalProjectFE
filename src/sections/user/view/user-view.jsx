@@ -155,9 +155,9 @@ export default function UserPage() {
     });
      toast
       .promise(userService.addUser(formAdd), {
-        pending: 'Đang xử lý...',
-        success: 'Thêm user đã được đăng ký thành công!',
-        error: 'Đã xảy ra lỗi khi đăng ký user!',
+        pending: 'Processing...',
+        success: 'User added successfully!',
+        error: 'An error occurred while adding the user!',
       })
       .then(async () => {
         setUsers([]);
@@ -177,9 +177,9 @@ export default function UserPage() {
   const onSubmitUpdateUser = async (formDataUpdate) => {
      toast
       .promise(userService.updateUser(formDataUpdate), {
-        pending: 'Đang xử lý...',
-        success: 'Cập nhật user thành công!',
-        error: 'Đã xảy ra lỗi khi cập nhật user!',
+        pending: 'Processing...',
+        success: 'User updated successfully!',
+        error: 'An error occurred while updating the user!',
       })
       .then(async () => {
         fetchData();      
@@ -188,9 +188,9 @@ export default function UserPage() {
   const onDeleteUser = async (id) => {
     toast
      .promise(userService.deleteUser(id), {
-       pending: 'Đang xử lý...',
-       success: 'Cập nhật user thành công!',
-       error: 'Đã xảy ra lỗi khi cập nhật user!',
+       pending: 'Processing...',
+       success: 'User deleted successfully!',
+       error: 'An error occurred while deleting the user!',
      })
      .then(async () => {
        fetchData();      

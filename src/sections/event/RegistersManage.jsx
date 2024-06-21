@@ -107,9 +107,9 @@ function RegistersManagePopup({ isOpen, onClose, onSubmitEvent, initialValues, l
   const onDeleteUser = async (id) => {
     toast
      .promise(userService.removeRegistrantFromEvent(id,initialValues.eventId), {
-       pending: 'Đang xử lý...',
+       pending: 'Processing...',
        success: 'Delete user from event success!',
-       error: 'Đã xảy ra lỗi khi cập nhật user!',
+       error: 'An error occurred while updating the user!',
      })
      .then(async () => {
        fetchData(initialValues.eventId);      

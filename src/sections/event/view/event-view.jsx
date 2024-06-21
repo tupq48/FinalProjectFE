@@ -98,9 +98,9 @@ export default function EventPage() {
     console.log(form);
     toast
       .promise(registerEvent(form), {
-        pending: 'Đang xử lý...',
-        success: 'Sự kiện đã được đăng ký thành công!',
-        error: 'Đã xảy ra lỗi khi đăng ký sự kiện!',
+        pending: 'Processing...',
+        success: 'The event has been successfully registered!',
+        error: 'An error occurred while registering the event!',
       })
       .then(() => {
         setEvents([]);

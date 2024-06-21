@@ -122,11 +122,11 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label, isEd
           minWidth: '400px',
         }}
       >
-        <h2 style={{ textAlign: 'center' }}>{initialValues ? 'Chỉnh sửa thông tin' : label}</h2>
+        <h2 style={{ textAlign: 'center' }}>{initialValues ? 'Edit information' : label}</h2>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
-              label="Tên sự kiện"
+              label="Event Name"
               variant="outlined"
               name="eventName"
               value={formData.eventName}
@@ -137,7 +137,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label, isEd
           </Grid>
           <Grid item xs={6}>
             <TextField
-              label="Điểm"
+              label="Point"
               variant="outlined"
               type="number"
               name="point"
@@ -148,7 +148,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label, isEd
           </Grid>
           <Grid item xs={6}>
             <TextField
-              label="Số người tối đa"
+              label="Max attendees"
               variant="outlined"
               name="maxAttenders"
               type="number"
@@ -163,7 +163,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label, isEd
 
           <Grid item xs={6}>
             <TextField
-              label="Địa điểm"
+              label="Location"
               variant="outlined"
               name="location"
               value={formData.location}
@@ -174,7 +174,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label, isEd
 
           <Grid item xs={6}>
             <TextField
-              label="Mô tả"
+              label="Description"
               variant="outlined"
               name="description"
               value={formData.description}
@@ -185,7 +185,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label, isEd
           <Grid item xs={6}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
-                label="Thời gian bắt đầu"
+                label="Date start"
                 value={formData.startTime}
                 onChange={(value) => handleChange('startTime', value)}
                 minDate={!isEdit ? dayjs() : null}
@@ -196,7 +196,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label, isEd
           <Grid item xs={6}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
-                label="Thời gian kết thúc"
+                label="Date end"
                 value={formData.endTime}
                 onChange={(value) => handleChange('endTime', value)}
                 minDateTime={!isEdit ? formData.startTime || dayjs() : formData.startTime}
@@ -219,7 +219,7 @@ function EventPopup({ isOpen, onClose, onSubmitEvent, initialValues, label, isEd
           </Grid>
           <Grid item xs={12}>
             <Button variant="contained" color="primary" onClick={handleSubmit}>
-              {initialValues ? 'Lưu' : 'Thêm'}
+              {initialValues ? 'Save' : 'Add'}
             </Button>
           </Grid>
         </Grid>

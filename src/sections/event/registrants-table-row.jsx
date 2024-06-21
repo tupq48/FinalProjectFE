@@ -89,9 +89,9 @@ export default function RegistrantsTableRow({
     try {
       toast
       .promise(updateStatusRegistrants(eventId,id,0), {
-        pending: 'Đang xử lý...',
-        success: 'Cập nhật trạng thái thành công!',
-        error: 'Đã xảy ra lỗi khi cập nhật trạng thái!',
+        pending: 'Processing...',
+        success: 'Status updated successfully!',
+        error: 'An error occurred while updating the status!',
       })
       .then(async () => {
         onRefreshUser()     
@@ -106,9 +106,9 @@ export default function RegistrantsTableRow({
     try {
       toast
       .promise(updateStatusRegistrants(eventId,id,1), {
-        pending: 'Đang xử lý...',
-        success: 'Cập nhật trạng thái thành công!',
-        error: 'Đã xảy ra lỗi khi cập nhật trạng thái!',
+        pending: 'Processing...',
+        success: 'Status updated successfully!',
+        error: 'An error occurred while updating the status!',
       })
       .then(async () => {
         onRefreshUser()     
