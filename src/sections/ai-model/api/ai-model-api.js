@@ -6,20 +6,7 @@ import urlBEAPI from 'src/sections/urlAPI';
 // ----------------------------------------------------------------------
 
 
-const isTrainningModel = async () => {
-  try {
-    const url = `${urlBEAPI}/api/ai-model/isTraining`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-      }
-    }); 
-    return response.data; 
-  } catch (error) {
-    console.error('Có lỗi xảy ra:', error);
-    return false;
-  }
-};
+const isTrainningModel = async () => false;
 
 
 const testModel = async (image) => {
@@ -71,7 +58,7 @@ const getTrainningImage = async () => {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`
       }
     });
-    const urls = response.data.map(item => item.urlImage);
+    const urls = response.data.map(item => item.urlRoundFaceImage);
     return urls; 
   } catch (error) {
     console.error('Có lỗi xảy ra:', error);

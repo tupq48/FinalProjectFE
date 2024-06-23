@@ -91,20 +91,20 @@ export default function EventCard({ event }) {
         <Stack direction="row" alignItems="center" justifyContent="center">
           {/* <span style={{ color: 'darkblue', fontWeight: 'bold' }}>{event.eventName}</span> */}
           <Tooltip title={event.eventName}>
-          <span 
-            style={{ 
-              color: 'darkblue', 
-              fontWeight: 'bold', 
-              whiteSpace: 'nowrap', 
-              overflow: 'hidden', 
-              textOverflow: 'ellipsis', 
-              maxWidth: '200px', // Điều chỉnh kích thước theo yêu cầu
-              display: 'inline-block'
-            }}
-          >
-            {event.eventName}
-          </span>
-        </Tooltip>
+            <span
+              style={{
+                color: 'darkblue',
+                fontWeight: 'bold',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                maxWidth: '200px', // Điều chỉnh kích thước theo yêu cầu
+                display: 'inline-block'
+              }}
+            >
+              {event.eventName}
+            </span>
+          </Tooltip>
         </Stack>
         <Stack direction="row" alignItems="center" justifyContent="center">
           <div style={{ ...timeStyle, fontWeight: 'bold' }}>
