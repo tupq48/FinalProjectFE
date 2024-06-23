@@ -171,9 +171,9 @@ export default function ProfileView() {
   const onSubmitUpdateUser = async (formDataUpdate) => {
     toast
       .promise(userService.updateUser(formDataUpdate), {
-        pending: 'Đang xử lý...',
-        success: 'Cập nhật user thành công!',
-        error: 'Đã xảy ra lỗi khi cập nhật user!',
+        pending: 'Processing...',
+        success: 'User updated successfully!',
+        error: 'An error occurred while updating the user!',
       })
       .then(async () => {
         fetchData();

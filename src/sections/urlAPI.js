@@ -1,7 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
 
-const urlBEAPI = "https://hoatdongcongdong.up.railway.app";
-// const urlBEAPI="http://localhost:8080"
+// const urlBEAPI = "https://hoatdongcongdong.up.railway.app";
+const urlBEAPI="http://localhost:8080"
 
 const isAdmin = () => {
     try {

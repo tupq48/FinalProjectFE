@@ -161,6 +161,21 @@ const updateStatusRegistrants = async (eventId, userId, updateBy) => {
     throw error; 
   }
 };
+const updateStatusRegistrantsPredicted = async (eventId) => {
+  const accessToken = localStorage.getItem("accessToken");
+  try {
+    const url = `${urlBEAPI}/api/registration/updateStatusRegistrantsPredicted?eventId=${eventId}`;
+    // const url = 'http://localhost:8080/api/event';
+    const response = await axios.put(url,'', {headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+    return response.data; 
+  } catch (error) {
+    console.error('Có lỗi xảy ra khi xác nhận:', error);
+    throw error; 
+  }
+};
 
   
-export {deleteEvent, updateEvent, registerEvent, getImagesUser, getEventsByPage, getEventInfoById, getEventsByStatus, updateStatusRegistrants  };
+export {deleteEvent, updateEvent, registerEvent, getImagesUser, getEventsByPage, getEventInfoById, getEventsByStatus, updateStatusRegistrants, updateStatusRegistrantsPredicted  };

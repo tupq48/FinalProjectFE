@@ -43,7 +43,7 @@ const schema = Joi.object({
     .required(),
   username: Joi.string().alphanum().min(3).max(30).required(),
   password: Joi.string()
-    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,50}$/)
+  .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{6,50}$/)
     .strict()
     .required()
     .messages({
@@ -51,6 +51,12 @@ const schema = Joi.object({
         '"Password" must contain at least one uppercase letter, one lowercase letter, and one digit.',
       'any.required': '"Password" is required.',
     }),
+  //   password: Joi.string()
+  // .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{6,50}$/)
+  // .strict()
+  // .messages({
+  //   'string.pattern.base': '"Password" must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.',
+  // }),
   repeatPassword: Joi.string().valid(Joi.ref('password')).required().messages({
     'any.only': '"Repeat Password" must match "Password".',
     'any.required': '"Repeat Password" is required.',

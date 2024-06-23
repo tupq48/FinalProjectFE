@@ -143,7 +143,22 @@ const login = async (formData) => {
     throw error;
   }
 };
+const approveAllRegistrations = async (eventId) => {
+  console.log("eventId: ", eventId)
+  const accessToken = localStorage.getItem("accessToken");
+  try {
+    await axios.post(`${urlBEAPI}/api/regiss/app`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+  } catch (error) {
+    console.error('Failed to register user:', error);
+    throw error;
+  }
+};
 
 export default {
-  getAllUsers, getListOfEventRegistrants, getListOfEventAttended, getTopUsersByEventPoints, removeRegistrantFromEvent, updateUser, getUserById, deleteUser, addUser, login
+  getAllUsers, getListOfEventRegistrants, getListOfEventAttended, getTopUsersByEventPoints, 
+  removeRegistrantFromEvent, updateUser, getUserById, deleteUser, addUser, login, approveAllRegistrations
 };

@@ -7,8 +7,11 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-import { Modal, Stack, Select, MenuItem, Typography, FormControl } from '@mui/material';
+import { Modal, Stack, Button, Select, MenuItem, Typography, FormControl } from '@mui/material';
 
+import { updateStatusRegistrantsPredicted } from 'src/_mock/events';
+
+import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
 import UserTableHead from '../user/user-table-head';
@@ -17,7 +20,6 @@ import userService from '../user/service/userService';
 import UserTableToolbar from '../user/user-table-toolbar';
 import RegistrantsTableRow from './registrants-table-row';
 import { emptyRows, applyFilter, getComparator } from '../user/utils' ;
-
 
 
 function RegistersManagePopup({ isOpen, onClose, onSubmitEvent, initialValues, label, EventId }) {
@@ -126,6 +128,17 @@ function RegistersManagePopup({ isOpen, onClose, onSubmitEvent, initialValues, l
   setFilterName(event.target.value);
   setUsers(dataFiltered);
 };
+const onApproveAll = async () =>{
+  try {
+    setLoading(true);
+    const data = await updateStatusRegistrantsPredicted(initialValues.eventId);
+    console.log("update: ", data)
+    fetchData(initialValues.eventId)
+  } catch (error) {
+    console.error('Error fetching data: ', error);
+  } finally {
+    setLoading(false);
+  }}
 
   return (
       <Modal open={isOpen} onClose={onClose}>
@@ -148,7 +161,18 @@ function RegistersManagePopup({ isOpen, onClose, onSubmitEvent, initialValues, l
         />
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Events</Typography>
-        <FormControl style={{ minWidth: '140px' }}>
+        <Stack direction="row" spacing={2}>
+        {filterValue === '1' && (
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<Iconify icon="material-symbols:order-approve" />}
+          onClick={onApproveAll}
+        >
+          Approve all
+        </Button>
+      )}
+          <FormControl style={{ minWidth: '140px' }}>
           <Select
             labelId="event-filter"
             id="event-filter-select"
@@ -161,6 +185,8 @@ function RegistersManagePopup({ isOpen, onClose, onSubmitEvent, initialValues, l
             <MenuItem value="3">Accepted</MenuItem>
           </Select>
         </FormControl>
+        </Stack>        
+        
       </Stack>
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
