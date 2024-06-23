@@ -190,7 +190,7 @@ export default function RegisterAiModelView() {
     >
       <CloudUploadIcon sx={{ fontSize: '48px', color: '#90CAF9' }} />
       <Typography variant="h6" gutterBottom>
-      Drag and drop the file here      
+        Drag and drop the file here
       </Typography>
       <Typography variant="body1" color="textSecondary">
         or
@@ -227,6 +227,46 @@ export default function RegisterAiModelView() {
     return '';
   };
 
+  const renderWarningTip = () => {
+    if (listImage.length > 0)
+      return (
+        <Box
+          sx={{
+            width: '80%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: '0 auto',
+            transform: 'translateZ(0)',
+          }}
+        >
+          <div style={{
+            border: '1px solid #f5c6cb',
+            backgroundColor: '#f8d7da',
+            color: '#721c24',
+            padding: '10px',
+            borderRadius: '5px'
+          }}>
+            <strong>Warning:</strong> We recommend removing images that cannot detect a face or detect too many faces.
+            This will help ensure the best possible quality for your face recognition model. For example, consider removing:
+            <br />
+            <a href="https://i.ibb.co/dcnp4gs/09c9cc54c3b6.jpg" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'blue' }}>Image with too many faces detected</a>
+            &nbsp;|&nbsp;
+            <a href="https://i.ibb.co/0Yc9nTx/b43399e171cb.jpg" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'blue' }}>Image unable to detect a face</a>
+            <br />
+            For training, consider using these example images:
+            <br />
+            <a href="https://i.ibb.co/105f8T6/b33f76289f28.jpg" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'blue' }}>Image detected perfectly</a>
+            &nbsp;|&nbsp;
+            <a href="https://i.ibb.co/V2KM3Xn/2face.png" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'blue' }}>Image detected with some noise</a>
+            <br />
+          </div>
+        </Box>
+      )
+    return null;
+  }
+
+
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -241,6 +281,7 @@ export default function RegisterAiModelView() {
         <>
           {renderPopup()}
           {renderFormUploadImage()}
+          {renderWarningTip()}
           {renderListUploadedImages()}
           {renderButtonCheckModel()}
         </>
