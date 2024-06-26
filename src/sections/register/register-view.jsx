@@ -43,12 +43,12 @@ const schema = Joi.object({
     .required(),
   username: Joi.string().alphanum().min(3).max(30).required(),
   password: Joi.string()
-  .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{6,50}$/)
+    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{6,50}$/)
     .strict()
     .required()
     .messages({
       'string.pattern.base':
-        '"Password" must contain at least one uppercase letter, one lowercase letter, and one digit.',
+        '"Password" must contain at least one uppercase letter, one lowercase letter, one specific letter, and one digit.',
       'any.required': '"Password" is required.',
     }),
   //   password: Joi.string()
@@ -116,11 +116,10 @@ export default function RegisterView() {
     // console.log('Form data:', saveData);
     const form = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
-  form.append(key, value);
-});
+      form.append(key, value);
+    });
     const response = await userService.addUser(form);
     localStorage.setItem('accessToken', response.accessToken);
-    alert('save done');
     console.log(response);
     window.location.href = '/';
   };

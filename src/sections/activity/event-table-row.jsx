@@ -11,7 +11,6 @@ import { Stack, Button, Tooltip } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
 
-
 // ----------------------------------------------------------------------
 
 export default function EventTableRow({
@@ -26,7 +25,7 @@ export default function EventTableRow({
   handleClick,
   imageUrl,
   isModelExist,
-  handleUploadProofImage
+  handleUploadProofImage,
 }) {
   const [open, setOpen] = useState(null);
 
@@ -40,7 +39,7 @@ export default function EventTableRow({
 
   const renderAction = () => {
     if (!isModelExist) {
-      return "You need to create a Identification Model first!";
+      return 'You need to create a Identification Model first!';
     }
 
     const [time, date] = startTime.split(' ');
@@ -53,22 +52,37 @@ export default function EventTableRow({
     const linkStyle = {
       color: 'inherit', // Giữ nguyên màu chữ
       textDecoration: 'none', // Loại bỏ gạch chân
-      fontStyle: 'italic',
     };
 
-    if (imageUrl != null && imageUrl !== "") {
-      if (status === "registered")
-        return <a href={imageUrl} target="_blank" style={linkStyle} rel="noopener noreferrer">Waiting Admin Accept</a>;
-      if (status === "attended")
-        return <a href={imageUrl} target="_blank" style={linkStyle} rel="noopener noreferrer">Accepted</a>;
+    if (imageUrl != null && imageUrl !== '') {
+      if (status === 'registered')
+        return (
+          <a href={imageUrl} target="_blank" style={linkStyle} rel="noopener noreferrer">
+            Waiting Admin Accept
+          </a>
+        );
+      if (status === 'attended')
+        return (
+          <a href={imageUrl} target="_blank" style={linkStyle} rel="noopener noreferrer">
+            Accepted
+          </a>
+        );
       if (status === 'registered_but_not_attended')
-        return <a href={imageUrl} target="_blank" style={linkStyle} rel="noopener noreferrer">Not Acceptted</a>
+        return (
+          <a href={imageUrl} target="_blank" style={linkStyle} rel="noopener noreferrer">
+            Not Acceptted
+          </a>
+        );
     }
 
     // So sánh thời gian hiện tại với startTime
-    if (currentDate > startDate && status === "registered") {
+    if (currentDate > startDate && status === 'registered') {
       return (
-        <Button variant="contained" component="label" sx={{ marginTop: '8px', marginBottom: '16px' }} >
+        <Button
+          variant="contained"
+          component="label"
+          sx={{ marginTop: '8px', marginBottom: '16px' }}
+        >
           Nộp ảnh
           <input
             type="file"
@@ -80,18 +94,17 @@ export default function EventTableRow({
       );
     }
 
-    return " ";
-  }
+    return ' ';
+  };
 
-  const tooltipTitleStatus = status === "registered_but_not_attended" 
-    ? "Registered But Not Attended".toUpperCase() 
-    : status.toUpperCase();
-
+  const tooltipTitleStatus =
+    status === 'registered_but_not_attended'
+      ? 'Registered But Not Attended'.toUpperCase()
+      : status.toUpperCase();
 
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
-
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Tooltip title={eventName}>
@@ -103,7 +116,7 @@ export default function EventTableRow({
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   maxWidth: '200px', // Điều chỉnh kích thước theo yêu cầu
-                  display: 'inline-block'
+                  display: 'inline-block',
                 }}
               >
                 {eventName}
@@ -122,7 +135,7 @@ export default function EventTableRow({
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 maxWidth: '200px', // Điều chỉnh kích thước theo yêu cầu
-                display: 'inline-block'
+                display: 'inline-block',
               }}
             >
               {startTime.split(' ')[1]}
@@ -140,7 +153,7 @@ export default function EventTableRow({
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 maxWidth: '200px', // Điều chỉnh kích thước theo yêu cầu
-                display: 'inline-block'
+                display: 'inline-block',
               }}
             >
               {endTime.split(' ')[1]}
@@ -158,13 +171,13 @@ export default function EventTableRow({
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 maxWidth: '100px', // Điều chỉnh kích thước theo yêu cầu
-                display: 'inline-block'
+                display: 'inline-block',
               }}
             >
               {location}
             </span>
           </Tooltip>
-          </TableCell>
+        </TableCell>
 
         <TableCell>
           <Tooltip title={point}>
@@ -176,7 +189,7 @@ export default function EventTableRow({
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 maxWidth: '150px', // Điều chỉnh kích thước theo yêu cầu
-                display: 'inline-block'
+                display: 'inline-block',
               }}
             >
               {point}
@@ -194,30 +207,46 @@ export default function EventTableRow({
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 maxWidth: '150px', // Điều chỉnh kích thước theo yêu cầu
-                display: 'inline-block'
+                display: 'inline-block',
               }}
             >
               {tooltipTitleStatus}
             </span>
           </Tooltip>
         </TableCell>
-
+        {console.log(status)}
         <TableCell>
-          <Tooltip title={renderAction()}>
+          {!isModelExist ? (
+            <Tooltip title={renderAction()}>
+              <span
+                style={{
+                  color: renderAction().length > 15 ? 'red' : 'blue',
+                  fontWeight: 'bold',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  maxWidth: '150px', // Điều chỉnh kích thước theo yêu cầu
+                  display: 'inline-block',
+                }}
+              >
+                {renderAction()}
+              </span>
+            </Tooltip>
+          ) : (
             <span
               style={{
-                color: renderAction().length > 15 ? "red" : "blue",
+                color: renderAction().length > 15 ? 'red' : 'blue',
                 fontWeight: 'bold',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 maxWidth: '150px', // Điều chỉnh kích thước theo yêu cầu
-                display: 'inline-block'
+                display: 'inline-block',
               }}
             >
               {renderAction()}
             </span>
-          </Tooltip>
+          )}
         </TableCell>
 
         <TableCell align="right">
@@ -237,7 +266,6 @@ export default function EventTableRow({
           sx: { width: 140 },
         }}
       >
-
         <MenuItem>
           <Link
             to={`/event/${eventId}`}
@@ -248,8 +276,9 @@ export default function EventTableRow({
               whiteSpace: 'nowrap',
               display: 'flex',
               alignItems: 'center',
-            }}>
-            <Iconify icon="eva:edit-fill" sx={{ marginRight: "10px" }} />
+            }}
+          >
+            <Iconify icon="eva:edit-fill" sx={{ marginRight: '10px' }} />
             View Event
           </Link>
         </MenuItem>
@@ -270,5 +299,5 @@ EventTableRow.propTypes = {
   status: PropTypes.string,
   imageUrl: PropTypes.string,
   isModelExist: PropTypes.bool,
-  handleUploadProofImage: PropTypes.func
+  handleUploadProofImage: PropTypes.func,
 };
