@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -9,22 +10,18 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
-import { account } from 'src/_mock/account';
+import getUserInfo from 'src/_mock/account';
 
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
+    label: 'Activity',
     icon: 'eva:home-fill',
   },
   {
     label: 'Profile',
     icon: 'eva:person-fill',
-  },
-  {
-    label: 'Settings',
-    icon: 'eva:settings-2-fill',
   },
 ];
 
@@ -32,6 +29,16 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+  const [account, setAccount] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getUserInfo();
+      setAccount(data);
+    }
+    fetchData();
+  }, []);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -39,7 +46,13 @@ export default function AccountPopover() {
 
   const handleClose = () => {
     setOpen(null);
-  };
+   };
+
+   const handleLogout = () => {
+    setOpen(null);
+    localStorage.removeItem('accessToken');
+    navigate('/login');
+   };
 
   return (
     <>
@@ -64,7 +77,7 @@ export default function AccountPopover() {
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {account.displayName.charAt(0).toUpperCase()}
+          {account.displayName != null && account.displayName.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
@@ -95,8 +108,8 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleClose}>
-            {option.label}
+  <MenuItem key={option.label} onClick={handleClose} component={Link} to={`/${option.label.toLowerCase()}`}>
+  {option.label}
           </MenuItem>
         ))}
 
@@ -105,7 +118,7 @@ export default function AccountPopover() {
         <MenuItem
           disableRipple
           disableTouchRipple
-          onClick={handleClose}
+          onClick={handleLogout}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
           Logout

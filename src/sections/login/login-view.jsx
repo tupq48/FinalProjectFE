@@ -1,4 +1,6 @@
+import Joi from 'joi';
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -13,35 +15,102 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { useRouter } from 'src/routes/hooks';
-
 import { bgGradient } from 'src/theme/css';
 
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
 
+import userService from '../user/service/userService';
+
 // ----------------------------------------------------------------------
+const schema = Joi.object({
+  username: Joi.string().alphanum().min(3).max(50).required(),
+  password: Joi.string()
+    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[ \-/:-@\\[-`{-~]?).{6,64}$/)
+    .strict()
+    .required()
+    .messages({
+      'string.pattern.base':
+        '"Password" must contain at least one uppercase letter, one lowercase letter, and one digit.',
+      'any.required': '"Password" is required.',
+    }),
+});
 
 export default function LoginView() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const theme = useTheme();
-
-  const router = useRouter();
-
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  });
+  const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState('');
 
-  const handleClick = () => {
-    router.push('/dashboard');
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
+    // Xóa thông báo lỗi server khi người dùng nhập dữ liệu
+    setServerError('');
+  };
+
+  const handleSubmit = async () => {
+    const from = location.state?.from || "/";
+
+    const validationResult = schema.validate(formData, { abortEarly: false });
+    if (validationResult.error) {
+      const newErrors = {};
+      validationResult.error.details.forEach((detail) => {
+        newErrors[detail.context.key] = detail.message;
+      });
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      const loginResponse = await userService.login(formData);
+      localStorage.setItem('accessToken', loginResponse.accessToken);
+      navigate(from, { replace: true });
+    } catch (error) {
+      if (error.response && error.response.status === 500) {
+        setServerError('Incorrect username or password');
+      } else {
+        setServerError('An error occurred. Please try again.');
+      }
+    }
   };
 
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField
+          value={formData.username}
+          onChange={handleChange}
+          helperText={errors.username}
+          error={!!errors.username}
+          name="username"
+          label="Email or Username"
+        />
 
         <TextField
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
+          value={formData.password}
+          onChange={handleChange}
+          error={!!errors.password}
+          helperText={errors.password}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -53,6 +122,12 @@ export default function LoginView() {
           }}
         />
       </Stack>
+
+      {serverError && (
+        <Typography color="error" sx={{ mt: 2 }}>
+          {serverError}
+        </Typography>
+      )}
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
         <Link variant="subtitle2" underline="hover">
@@ -66,7 +141,7 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={handleClick}
+        onClick={handleSubmit}
       >
         Login
       </LoadingButton>
@@ -99,11 +174,11 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign in to Minimal</Typography>
+          <Typography variant="h4">Sign in</Typography>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Don’t have an account?
-            <Link variant="subtitle2" sx={{ ml: 0.5 }}>
+            <Link variant="subtitle2" sx={{ ml: 0.5 }} href="/register">
               Get started
             </Link>
           </Typography>

@@ -1,10 +1,9 @@
-import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -15,10 +14,12 @@ import { RouterLink } from 'src/routes/components';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
-import { account } from 'src/_mock/account';
+import getUserInfo from 'src/_mock/account';
 
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
+
+import { isAdmin } from 'src/sections/urlAPI';
 
 import { NAV } from './config-layout';
 import navConfig from './config-navigation';
@@ -26,14 +27,23 @@ import navConfig from './config-navigation';
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
+
+  const [account, setAccount] = useState([]);
+
   const pathname = usePathname();
 
   const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
+    const fetchData = async () => {
+      const userData = await getUserInfo();
+      setAccount(userData);
+    }
+
     if (openNav) {
       onCloseNav();
     }
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
@@ -62,42 +72,19 @@ export default function Nav({ openNav, onCloseNav }) {
     </Box>
   );
 
+  const currentUser = {
+    role: isAdmin() ? 'admin' : 'user',
+  };
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-      {navConfig.map((item) => (
-        <NavItem key={item.title} item={item} />
-      ))}
+      {navConfig
+        .filter((item) => item.role === currentUser.role || item.role === 'all')
+        .map((item) => (
+          <NavItem key={item.title} item={item} />
+        ))}
     </Stack>
   );
 
-  const renderUpgrade = (
-    <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-      <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
-        <Box
-          component="img"
-          src="/assets/illustrations/illustration_avatar.png"
-          sx={{ width: 100, position: 'absolute', top: -50 }}
-        />
-
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="h6">Get more?</Typography>
-
-          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-            From only $69
-          </Typography>
-        </Box>
-
-        <Button
-          href="https://material-ui.com/store/items/minimal-dashboard/"
-          target="_blank"
-          variant="contained"
-          color="inherit"
-        >
-          Upgrade to Pro
-        </Button>
-      </Stack>
-    </Box>
-  );
 
   const renderContent = (
     <Scrollbar
@@ -110,7 +97,13 @@ export default function Nav({ openNav, onCloseNav }) {
         },
       }}
     >
-      <Logo sx={{ mt: 3, ml: 4 }} />
+      {/* <Logo sx={{ mt: 3, ml: 4 }} /> */}
+      {
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: 3, ml: 4 }}>
+          <Logo /> {/* Thay thế `Logo` bằng mã của logo của bạn */}
+          <Typography  sx={{ ml: 1, fontSize:"17px", fontWeight: "bold"  }}>Bách Khoa Đà Nẵng</Typography> {/* Thêm văn bản "DUT" */}
+        </Box>
+      }
 
       {renderAccount}
 
@@ -118,7 +111,6 @@ export default function Nav({ openNav, onCloseNav }) {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      {renderUpgrade}
     </Scrollbar>
   );
 
@@ -166,8 +158,7 @@ Nav.propTypes = {
 
 function NavItem({ item }) {
   const pathname = usePathname();
-
-  const active = item.path === pathname;
+  const active = item.path === pathname || pathname.includes(item.path);
 
   return (
     <ListItemButton
